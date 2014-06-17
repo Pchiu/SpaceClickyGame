@@ -1,11 +1,24 @@
 angular.module('SpaceClickyGameApp', [])
-.controller('SpaceController', ['$scope', function ($scope){
+.controller('SpaceController', ['$scope', '$timeout', function ($scope,$timeout){
 	$scope.clicks = 0;
 	$scope.multiplier = 1.00;
 	$scope.money = 0;
 
-	$scope.purchasesToggleTitle = "Open Purchases Menu";
+	$scope.moneyPerTick = 0;
+	$scope.timerLoop = function () {
+		$scope.money += $scope.moneyPerTick;
+		
+        $timeout($scope.timerLoop, 1000);
+	}
 	
+	$scope.timer = $timeout($scope.timerLoop,1000);
+	$scope.$on("$destroy",
+		function(event) {
+			$timeout.cancel($scope.timer);
+		}
+	);
+	
+	$scope.purchasesToggleTitle = "Open Purchases Menu";
 	$scope.purchasedUpgrades = {};
 
 	$scope.purchaseMenuOpen = false;
@@ -36,16 +49,21 @@ angular.module('SpaceClickyGameApp', [])
 					amountOwned: 0
 				};
 			}
-			else
+			
+			if(!purchase.multiple)
 			{
-				if(!purchase.multiple)
-				{
-					console.log('You can only have one of this upgrade.')
-					return;
-				}
-				$scope.purchasedUpgrades[purchase.id].amountOwned++;
+				console.log('You can only have one of this upgrade.')
+				return;
 			}
-			$scope.multiplier += purchase.value;
+			$scope.purchasedUpgrades[purchase.id].amountOwned++;
+			
+			if(purchase.moneyPerTick) {
+				$scope.moneyPerTick += purchase.moneyPerTick;
+			}
+			if(purchase.value) {
+				$scope.multiplier += purchase.value;
+			}
+			
 			purchase.cost *= purchase.costincrease;
 			console.log('Purchased ' + purchase.name);
 		} else {
@@ -72,6 +90,16 @@ angular.module('SpaceClickyGameApp', [])
 			'multiple': false,
 			'costincrease': 1.15,
 			'cost':25
+		},
+		
+		{
+			'id':'autoDrill',
+			'name':'Auto Drill',
+			'description':'It drills automatically',
+			'moneyPerTick': 10,
+			'multiple': true,
+			'costincrease': 1.15,
+			'cost':250
 		}
 	];
 	
