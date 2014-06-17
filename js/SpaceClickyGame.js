@@ -4,12 +4,66 @@ angular.module('SpaceClickyGameApp', [])
 	$scope.multiplier = 1.00;
 	$scope.money = 0;
 
+	$scope.purchasesToggleTitle = "Open Purchases Menu";
+	
+	$scope.purchasedUpgrades = {};
+
+	$scope.purchaseMenuOpen = false;
+	$scope.togglePurchasesMenu = function () {
+		$scope.purchaseMenuOpen = !$scope.purchaseMenuOpen;
+
+		if($scope.purchaseMenuOpen) {
+			$scope.purchasesToggleTitle = "Close Purchases Menu";
+		} else {
+			$scope.purchasesToggleTitle = "Open Purchases Menu";
+		}
+	};
+	
+	$scope.spendMoney = function(amount) {
+		if($scope.money > amount) {
+			$scope.money -= amount;
+			return true;
+		}
+		return false;
+	}
+	
+	$scope.purchaseUpgrade = function(purchase) {
+		if($scope.spendMoney(purchase.cost)) {
+			if(!$scope.purchasedUpgrades[purchase.id]) {
+				$scope.purchasedUpgrades[purchase.id] = 
+				{
+					purchase: purchase,
+					amountOwned: 0
+				};
+			}
+			$scope.purchasedUpgrades[purchase.id].amountOwned++;
+			
+			console.log('Purchased ' + purchase.name);
+		} else {
+			console.log('Not enough money');
+		}
+	}
+
+	$scope.purchaseOptions = [
+		{
+			'id':'bigDrill',
+			'name':'Big drill',
+			'description':'A big drill',
+			'cost':10
+		},
+		
+		{ 
+			'id':'biggerDrill',
+			'name':'Bigger drill',
+			'description':'A bigger drill',
+			'cost':25
+		}
+	];
+	
 	$scope.clickButton = function() {
 		$scope.clicks += 1;
 		$scope.money += 1.00 * $scope.multiplier;
-		
-		console.log($scope.clicks);
-	}
+	};
 
 }])
 
@@ -81,6 +135,18 @@ angular.module('SpaceClickyGameApp', [])
 		}
 	}
 })
+.directive('purchase',function() {
+	return {
+		restrict: 'E',
+		
+		scope: {
+			purchaseOption:'=',
+			'purchase':'&onPurchase'
+		},
+		templateUrl: 'templates/purchase.html'
+	}
+})
+
 .factory("Upgrade", function(){
 	function Upgrade(name, description, type, value, cost){
 		this.name = name;

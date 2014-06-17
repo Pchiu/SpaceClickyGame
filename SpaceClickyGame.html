@@ -20,8 +20,6 @@
 				<ul class="nav navbar-nav">
 					<li><a href="#">Home</a></li>
 				</ul>
-				
-			
 			</div>
 		</div>
 	</div>
@@ -34,7 +32,21 @@
 		<div class="col-md-6">
 			<p>Clicks: {{clicks}}</p>
 			<p>Money: {{money}}</p>
+			<p>Upgrades:</p>
+			<ul>
+				<li ng-repeat="ownedPurchaseType in purchasedUpgrades">{{ownedPurchaseType.purchase.name}} ({{ownedPurchaseType.amountOwned}})</li>
+			</ul>
+			
+			
+			<p><button id="purchase" ng-click="togglePurchasesMenu()">{{purchasesToggleTitle}}</button></p>
+			
+			<div id="purchaseWindow" ng-if="purchaseMenuOpen" class="row">
+				<purchase ng-repeat="purchaseOption in purchaseOptions" purchase-option="purchaseOption" on-purchase="purchaseUpgrade(purchaseOption)" class="col-md-6"></purchase>
+			</div>
+			
 		</div>
+		
+		
 	</div>
 	<!--
 	Canvas without KineticJS
