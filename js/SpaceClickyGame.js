@@ -20,7 +20,7 @@ angular.module('SpaceClickyGameApp', [])
 	};
 	
 	$scope.spendMoney = function(amount) {
-		if($scope.money > amount) {
+		if($scope.money >= amount) {
 			$scope.money -= amount;
 			return true;
 		}
@@ -36,8 +36,17 @@ angular.module('SpaceClickyGameApp', [])
 					amountOwned: 0
 				};
 			}
-			$scope.purchasedUpgrades[purchase.id].amountOwned++;
-			
+			else
+			{
+				if(!purchase.multiple)
+				{
+					console.log('You can only have one of this upgrade.')
+					return;
+				}
+				$scope.purchasedUpgrades[purchase.id].amountOwned++;
+			}
+			$scope.multiplier += purchase.value;
+			purchase.cost *= purchase.costincrease;
 			console.log('Purchased ' + purchase.name);
 		} else {
 			console.log('Not enough money');
@@ -49,6 +58,9 @@ angular.module('SpaceClickyGameApp', [])
 			'id':'bigDrill',
 			'name':'Big drill',
 			'description':'A big drill',
+			'value': 1,
+			'multiple': true,
+			'costincrease': 1.15,
 			'cost':10
 		},
 		
@@ -56,6 +68,9 @@ angular.module('SpaceClickyGameApp', [])
 			'id':'biggerDrill',
 			'name':'Bigger drill',
 			'description':'A bigger drill',
+			'value': 2,
+			'multiple': false,
+			'costincrease': 1.15,
 			'cost':25
 		}
 	];

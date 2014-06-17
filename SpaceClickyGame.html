@@ -31,7 +31,8 @@
 
 		<div class="col-md-6">
 			<p>Clicks: {{clicks}}</p>
-			<p>Money: {{money}}</p>
+			<p>Money per click: {{multiplier |number:0}}</p>
+			<p>Money: {{money |number:0 }}</p>
 			<p>Upgrades:</p>
 			<ul>
 				<li ng-repeat="ownedPurchaseType in purchasedUpgrades">{{ownedPurchaseType.purchase.name}} ({{ownedPurchaseType.amountOwned}})</li>

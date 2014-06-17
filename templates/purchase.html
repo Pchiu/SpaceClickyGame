@@ -2,7 +2,7 @@
 	<ul>
 		<li>{{purchaseOption.name}}</li>
 		<li>{{purchaseOption.description}}</li>
-		<li><strong>Cost:</strong> {{purchaseOption.cost}}</li>
+		<li><strong>Cost:</strong> {{purchaseOption.cost |number:0}}</li>
 	</ul>
 	<button class="purchase-button" ng-click="purchase(purchaseOption)">Purchase</button>
 </div>
