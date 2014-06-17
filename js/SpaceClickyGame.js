@@ -1,46 +1,87 @@
-var spaceClickyGameApp = angular.module('SpaceClickyGameApp', []);
-spaceClickyGameApp.controller('SpaceController', ['$scope', function ($scope){
-
+angular.module('SpaceClickyGameApp', [])
+.controller('SpaceController', ['$scope', function ($scope){
 	$scope.clicks = 0;
 	$scope.multiplier = 1.00;
 	$scope.money = 0;
 
-
 	$scope.clickButton = function() {
 		$scope.clicks += 1;
-		$scope.money += 1.00 * $scope.multiplier
+		$scope.money += 1.00 * $scope.multiplier;
+		
+		console.log($scope.clicks);
 	}
 
-	$scope.drawClickable = function(layer, image, x, y) {
-		var clickable = new Kinetic.Image({
-			x: x,
-			y: y,
-			image: image
-		})
-
-		clickable.on('click', function() {
-			var scope = angular.element($("#display")).scope();
-			scope.$apply(function(){
-				scope.clickButton();
-			})
-		})
-
-		layer.add(clickable)
-		clickable.cache();
-		clickable.drawHitFromCache();
-		layer.draw();
-	}
 }])
 
-var canvas;
-var context;
-var totalResources = 1;
-var numResourcesLoaded = 0;
-var images = {};
-var mainStage;
-var mainLayer;
+// Set up kinetic.js stage
+.directive('spaceClickyStage', function() {
+	return {
+		link: function (scope, element, attrs) {
+			scope.kineticCanvas = {
+				canvas: null,
+				context: null,
+				totalResources: 1,
+				numResourcesLoaded: 0,
+				images: {},
+				mainStage: null,
+				mainLayer: null,
 
-spaceClickyGameApp.factory("Upgrade", function(){
+				resourceLoaded: function() {
+					this.numResourcesLoaded += 1;
+					if (this.numResourcesLoaded === this.totalResources) {
+						this.drawInitialItems()
+					}
+				},
+				
+				loadImage: function(name) {
+					this.images[name] = new Image();
+					var self = this;
+					this.images[name].onload = function() {		
+						self.resourceLoaded();
+					}
+					this.images[name].src = "images/" + name + ".png";
+				},
+				
+				drawInitialItems: function() {
+					this.drawClickable(this.mainLayer, this.images["rock"], 100, 100);
+				},
+				
+				drawClickable: function(layer, image, x, y) {
+					var clickable = new Kinetic.Image({
+						x: x,
+						y: y,
+						image: image
+					});
+
+					clickable.on('click', function() {
+						scope.clickButton();
+						scope.$apply();
+					});
+
+					layer.add(clickable);
+					clickable.cache();
+					clickable.drawHitFromCache();
+					layer.draw();
+				},
+				
+				init: function() {
+					this.mainStage = new Kinetic.Stage({
+						container: 'mainStage',
+						width: 500, 
+						height: 500
+					});
+
+					this.mainLayer = new Kinetic.Layer();
+					this.mainStage.add(this.mainLayer);
+					this.loadImage("rock");
+				}				
+			};
+			
+			scope.kineticCanvas.init();
+		}
+	}
+})
+.factory("Upgrade", function(){
 	function Upgrade(name, description, type, value, cost){
 		this.name = name;
 		this.description = description;
@@ -49,38 +90,4 @@ spaceClickyGameApp.factory("Upgrade", function(){
 		this.cost = cost;
 	}
 	return (Upgrade);
-})
-
-window.onload = function() {
-	mainStage = new Kinetic.Stage({
-		container: 'mainStage',
-		width: 500, 
-		height: 500
-	})
-
-	mainLayer = new Kinetic.Layer();
-	mainStage.add(mainLayer)
-	loadImage("rock");
-}
-
-function loadImage(name) {
-	images[name] = new Image();
-	images[name].onload = function() {		
-		resourceLoaded();
-	}
-	images[name].src = "images/" + name + ".png";
-}
-
-function resourceLoaded() {
-	numResourcesLoaded += 1;
-	if (numResourcesLoaded === totalResources) {
-		drawInitialItems()
-	}
-}
-
-function drawInitialItems(){
-	var scope = angular.element($("#display")).scope();
-	scope.$apply(function(){
-		scope.drawClickable(mainLayer, images["rock"], 100, 100);
-	})
-}
+});
