@@ -17,8 +17,8 @@ angular.module('SpaceClickyGameApp')
 					amountOwned: 0
 				};
 			}
-			if(!purchase.multiple && player.purchasedUpgrades[purchase.id].amountOwned > 0) {
-				console.log('You can only have one of this upgrade.')
+			if(purchase.maximum != null && player.purchasedUpgrades[purchase.id].amountOwned >= purchase.maximum) {
+				console.log("You cannot have any more of these");
 				return;
 			}
 			if(player.spendMoney(purchase.cost)) {

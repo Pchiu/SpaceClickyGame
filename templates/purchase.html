@@ -6,6 +6,7 @@
 		<ul>
 			<li>{{purchaseOption.name}}</li>
 			<li>{{purchaseOption.description}}</li>
+			<li ng-if="purchaseOption.maximum"><strong>Maximum:</strong> {{purchaseOption.maximum}}</li>
 			<li><strong>Cost:</strong> {{purchaseOption.cost |number:0}}</li>
 		</ul>
 		

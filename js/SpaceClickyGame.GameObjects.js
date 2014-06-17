@@ -7,7 +7,6 @@ angular.module('SpaceClickyGameApp')
 				'name':'Big drill',
 				'description':'A big drill',
 				'value': 1,
-				'multiple': true,
 				'costincrease': 1.15,
 				'cost':10,
 				'imgpath':'images/bigdrill.png'
@@ -17,7 +16,7 @@ angular.module('SpaceClickyGameApp')
 				'name':'Bigger drill',
 				'description':'A bigger drill',
 				'value': 2,
-				'multiple': false,
+				'maximum': 1,
 				'costincrease': 1.15,
 				'cost':25,
 				'imgpath':'images/biggerdrill.png'
@@ -27,7 +26,6 @@ angular.module('SpaceClickyGameApp')
 				'name':'Auto Drill',
 				'description':'It drills automatically',
 				'moneyPerTick': 1,
-				'multiple': true,
 				'costincrease': 1.15,
 				'cost':30
 			}
