@@ -41,20 +41,20 @@ angular.module('SpaceClickyGameApp', [])
 	}
 	
 	$scope.purchaseUpgrade = function(purchase) {
-		if($scope.spendMoney(purchase.cost)) {
-			if(!$scope.purchasedUpgrades[purchase.id]) {
-				$scope.purchasedUpgrades[purchase.id] = 
-				{
-					purchase: purchase,
-					amountOwned: 0
-				};
-			}
-			
-			if(!purchase.multiple)
+		if(!$scope.purchasedUpgrades[purchase.id]) {
+			$scope.purchasedUpgrades[purchase.id] = 
 			{
-				console.log('You can only have one of this upgrade.')
-				return;
-			}
+				purchase: purchase,
+				amountOwned: 0
+			};
+		}
+		if(!purchase.multiple && $scope.purchasedUpgrades[purchase.id].amountOwned > 0) {
+			console.log('You can only have one of this upgrade.')
+			return;
+		}
+		if($scope.spendMoney(purchase.cost)) {
+
+			
 			$scope.purchasedUpgrades[purchase.id].amountOwned++;
 			
 			if(purchase.moneyPerTick) {
@@ -98,10 +98,10 @@ angular.module('SpaceClickyGameApp', [])
 			'id':'autoDrill',
 			'name':'Auto Drill',
 			'description':'It drills automatically',
-			'moneyPerTick': 10,
+			'moneyPerTick': 1,
 			'multiple': true,
 			'costincrease': 1.15,
-			'cost':250
+			'cost':30
 		}
 	];
 	

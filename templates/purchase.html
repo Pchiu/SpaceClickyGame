@@ -1,13 +1,15 @@
-<div class="purchase-container">
-	<div class="itempic">
+<div class="purchase-container row">
+	<div class="col-md-5">
 		<img src="{{purchaseOption.imgpath}}" ng-if="purchaseOption.imgpath"></img>
 	</div>
-	<div class="itemstats">
+	<div class="col-md-7">
 		<ul>
 			<li>{{purchaseOption.name}}</li>
 			<li>{{purchaseOption.description}}</li>
 			<li><strong>Cost:</strong> {{purchaseOption.cost |number:0}}</li>
 		</ul>
+		
+		<button class="purchase-button" ng-click="purchase(purchaseOption)">Purchase</button>
 	</div>
-	<button class="purchase-button" ng-click="purchase(purchaseOption)">Purchase</button>
+	
 </div>
