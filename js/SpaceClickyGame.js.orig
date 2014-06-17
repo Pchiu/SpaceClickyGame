@@ -90,8 +90,11 @@ angular.module('SpaceClickyGameApp', [])
 			'value': 2,
 			'multiple': false,
 			'costincrease': 1.15,
+<<<<<<< HEAD
 			'cost':25,
 			'imgpath':'images/biggerdrill.png'
+=======
+			'cost':25
 		},
 		
 		{
@@ -102,6 +105,7 @@ angular.module('SpaceClickyGameApp', [])
 			'multiple': true,
 			'costincrease': 1.15,
 			'cost':250
+>>>>>>> origin/master
 		}
 	];
 	
