@@ -61,7 +61,8 @@ angular.module('SpaceClickyGameApp', [])
 			'value': 1,
 			'multiple': true,
 			'costincrease': 1.15,
-			'cost':10
+			'cost':10,
+			'imgpath':'images/bigdrill.png'
 		},
 		
 		{ 
@@ -71,7 +72,8 @@ angular.module('SpaceClickyGameApp', [])
 			'value': 2,
 			'multiple': false,
 			'costincrease': 1.15,
-			'cost':25
+			'cost':25,
+			'imgpath':'images/biggerdrill.png'
 		}
 	];
 	
