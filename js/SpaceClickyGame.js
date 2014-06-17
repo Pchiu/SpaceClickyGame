@@ -1,8 +1,34 @@
 var spaceClickyGameApp = angular.module('SpaceClickyGameApp', []);
 spaceClickyGameApp.controller('SpaceController', ['$scope', function ($scope){
+
 	$scope.clicks = 0;
+	$scope.multiplier = 1.00;
+	$scope.money = 0;
+
+
 	$scope.clickButton = function() {
 		$scope.clicks += 1;
+		$scope.money += 1.00 * $scope.multiplier
+	}
+
+	$scope.drawClickable = function(layer, image, x, y) {
+		var clickable = new Kinetic.Image({
+			x: x,
+			y: y,
+			image: image
+		})
+
+		clickable.on('click', function() {
+			var scope = angular.element($("#display")).scope();
+			scope.$apply(function(){
+				scope.clickButton();
+			})
+		})
+
+		layer.add(clickable)
+		clickable.cache();
+		clickable.drawHitFromCache();
+		layer.draw();
 	}
 }])
 
@@ -14,10 +40,18 @@ var images = {};
 var mainStage;
 var mainLayer;
 
+spaceClickyGameApp.factory("Upgrade", function(){
+	function Upgrade(name, description, type, value, cost){
+		this.name = name;
+		this.description = description;
+		this.type = type;
+		this.value = value;
+		this.cost = cost;
+	}
+	return (Upgrade);
+})
 
 window.onload = function() {
-	//canvas = document.getElementById('mainDisplay');
-	//context = canvas.getContext('2d');
 	mainStage = new Kinetic.Stage({
 		container: 'mainStage',
 		width: 500, 
@@ -25,6 +59,7 @@ window.onload = function() {
 	})
 
 	mainLayer = new Kinetic.Layer();
+	mainStage.add(mainLayer)
 	loadImage("rock");
 }
 
@@ -44,24 +79,8 @@ function resourceLoaded() {
 }
 
 function drawInitialItems(){
-	rock = new Kinetic.Image({
-		x: 100,
-		y: 100,
-		image: images["rock"],
+	var scope = angular.element($("#display")).scope();
+	scope.$apply(function(){
+		scope.drawClickable(mainLayer, images["rock"], 100, 100);
 	})
-
-	rock.on('click', function() {
-		console.log("click");
-		var scope = angular.element($("#display")).scope();
-		scope.$apply(function(){
-			scope.clickButton();
-		})
-		
-	})
-
-	mainLayer.add(rock);
-	mainStage.add(mainLayer);
-	rock.cache();
-	rock.drawHitFromCache();
-	mainLayer.drawHit();
 }
