@@ -1,13 +1,12 @@
 angular.module('SpaceClickyGameApp', [])
-.controller('SpaceController', ['$scope', '$timeout', function ($scope,$timeout){
-	$scope.clicks = 0;
-	$scope.multiplier = 1.00;
-	$scope.money = 0;
-
-	$scope.moneyPerTick = 0;
+.controller('SpaceController', ['$scope', '$timeout', 'Player', 'Shop', 
+		function ($scope, $timeout, Player, Shop) {
+	
+	$scope.player = Player;
+	$scope.shop = Shop;
+	
 	$scope.timerLoop = function () {
-		$scope.money += $scope.moneyPerTick;
-		
+		$scope.player.money += $scope.player.moneyPerTick;
         $timeout($scope.timerLoop, 1000);
 	}
 	
@@ -18,98 +17,14 @@ angular.module('SpaceClickyGameApp', [])
 		}
 	);
 	
-	$scope.purchasesToggleTitle = "Open Purchases Menu";
-	$scope.purchasedUpgrades = {};
+	$scope.$watch('shop.purchaseMenuOpen', function(open) {
+        $scope.purchasesToggleTitle = open ? 'Close purchases menu' : 'Open purchases menu';
+    }, true);
 
-	$scope.purchaseMenuOpen = false;
-	$scope.togglePurchasesMenu = function () {
-		$scope.purchaseMenuOpen = !$scope.purchaseMenuOpen;
-
-		if($scope.purchaseMenuOpen) {
-			$scope.purchasesToggleTitle = "Close Purchases Menu";
-		} else {
-			$scope.purchasesToggleTitle = "Open Purchases Menu";
-		}
-	};
-	
-	$scope.spendMoney = function(amount) {
-		if($scope.money >= amount) {
-			$scope.money -= amount;
-			return true;
-		}
-		return false;
-	}
-	
-	$scope.purchaseUpgrade = function(purchase) {
-		if(!$scope.purchasedUpgrades[purchase.id]) {
-			$scope.purchasedUpgrades[purchase.id] = 
-			{
-				purchase: purchase,
-				amountOwned: 0
-			};
-		}
-		if(!purchase.multiple && $scope.purchasedUpgrades[purchase.id].amountOwned > 0) {
-			console.log('You can only have one of this upgrade.')
-			return;
-		}
-		if($scope.spendMoney(purchase.cost)) {
-
-			
-			$scope.purchasedUpgrades[purchase.id].amountOwned++;
-			
-			if(purchase.moneyPerTick) {
-				$scope.moneyPerTick += purchase.moneyPerTick;
-			}
-			if(purchase.value) {
-				$scope.multiplier += purchase.value;
-			}
-			
-			purchase.cost *= purchase.costincrease;
-			console.log('Purchased ' + purchase.name);
-		} else {
-			console.log('Not enough money');
-		}
-	}
-
-	$scope.purchaseOptions = [
-		{
-			'id':'bigDrill',
-			'name':'Big drill',
-			'description':'A big drill',
-			'value': 1,
-			'multiple': true,
-			'costincrease': 1.15,
-			'cost':10,
-			'imgpath':'images/bigdrill.png'
-		},
-		
-		{ 
-			'id':'biggerDrill',
-			'name':'Bigger drill',
-			'description':'A bigger drill',
-			'value': 2,
-			'multiple': false,
-			'costincrease': 1.15,
-			'cost':25,
-			'imgpath':'images/biggerdrill.png'
-		},
-		
-		{
-			'id':'autoDrill',
-			'name':'Auto Drill',
-			'description':'It drills automatically',
-			'moneyPerTick': 1,
-			'multiple': true,
-			'costincrease': 1.15,
-			'cost':30
-		}
-	];
-	
 	$scope.clickButton = function() {
-		$scope.clicks += 1;
-		$scope.money += 1.00 * $scope.multiplier;
+		$scope.player.clicks += 1;
+		$scope.player.money += 1.00 * $scope.player.multiplier;
 	};
-
 }])
 
 // Set up kinetic.js stage
@@ -191,7 +106,7 @@ angular.module('SpaceClickyGameApp', [])
 		templateUrl: 'templates/purchase.html'
 	}
 })
-
+/*
 .factory("Upgrade", function(){
 	function Upgrade(name, description, type, value, cost){
 		this.name = name;
@@ -201,4 +116,4 @@ angular.module('SpaceClickyGameApp', [])
 		this.cost = cost;
 	}
 	return (Upgrade);
-});
+});*/

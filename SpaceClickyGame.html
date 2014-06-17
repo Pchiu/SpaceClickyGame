@@ -7,6 +7,9 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="js/kinetic-v5.1.0.min.js"></script>
 		<script src="js/SpaceClickyGame.js"></script>
+		<script src="js/SpaceClickyGame.Player.js"></script>
+		<script src="js/SpaceClickyGame.GameObjects.js"></script>
+		<script src="js/SpaceClickyGame.Shop.js"></script>
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/items.css" rel="stylesheet">
 	</head>
@@ -32,20 +35,20 @@
 		</div>
 
 		<div class="col-md-6">
-			<p>Clicks: {{clicks}}</p>
-			<p>Money per click: {{multiplier | number:0}}</p>
-			<p>Money per tick: {{moneyPerTick | number:0}}</p>
-			<p>Money: {{money |number:0 }}</p>
+			<p>Clicks: {{player.clicks}}</p>
+			<p>Money per click: {{player.multiplier | number:0}}</p>
+			<p>Money per tick: {{player.moneyPerTick | number:0}}</p>
+			<p>Money: {{player.money |number:0 }}</p>
 			<p>Upgrades:</p>
 			<ul>
-				<li ng-repeat="ownedPurchaseType in purchasedUpgrades" ng-if="ownedPurchaseType.amountOwned > 0">{{ownedPurchaseType.purchase.name}} ({{ownedPurchaseType.amountOwned}})</li>
+				<li ng-repeat="ownedPurchaseType in player.purchasedUpgrades" ng-if="ownedPurchaseType.amountOwned > 0">{{ownedPurchaseType.purchase.name}} ({{ownedPurchaseType.amountOwned}})</li>
 			</ul>
 			
 			
-			<p><button id="purchase" ng-click="togglePurchasesMenu()">{{purchasesToggleTitle}}</button></p>
+			<p><button id="purchase" ng-click="shop.togglePurchasesMenu()">{{purchasesToggleTitle}}</button></p>
 			
-			<div id="purchaseWindow" ng-if="purchaseMenuOpen" class="row">
-				<purchase ng-repeat="purchaseOption in purchaseOptions" purchase-option="purchaseOption" on-purchase="purchaseUpgrade(purchaseOption)" class="col-md-6"></purchase>
+			<div id="purchaseWindow" ng-if="shop.purchaseMenuOpen" class="row">
+				<purchase ng-repeat="purchaseOption in shop.purchaseOptions" purchase-option="purchaseOption" on-purchase="shop.purchaseUpgrade(purchaseOption)" class="col-md-6"></purchase>
 			</div>
 			
 		</div>
