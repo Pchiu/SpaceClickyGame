@@ -8,6 +8,23 @@ notification-center {
 	z-index: 1;
 }
 
+div.notification {
+	background-color: #eee;
+	padding: 5px 10px;
+}
+
+.notification-title {
+	font-weight: bold;
+}
+
+div.notification.highlight {
+	background-color: #8A6D3B;
+}
+
+div.notification.error {
+	background-color: #f0d2d2;
+}
+
 notification.ng-enter {
 	animation: slideInDown 0.2s;
 }
