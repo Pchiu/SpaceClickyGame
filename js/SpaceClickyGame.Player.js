@@ -5,6 +5,7 @@ angular.module('SpaceClickyGameApp')
 		money: 100000,
 		multiplier: 1,
 		moneyPerTick: 0,
+		tier: 0,
 		purchasedUpgrades: {
 		},
 		

@@ -55,22 +55,28 @@ angular.module('SpaceClickyGameApp', [])
 						this.objects.autoDrills.pop();
 					}
 					while(this.objects.autoDrills.length < count) {
-						var drill = new Kinetic.Image({
-							x: 0,
-							y: 0,
-							width: 50,
-							height: 50,
-							offset: { x: 25, y: 25 },
-							image: this.images["bigdrill.png"]
-						});
+						var drill = {
+										'image': new Kinetic.Image({
+											x: this.mainStage.width()/2,
+											y: this.mainStage.height()/2,
+											width: 38,
+											height: 50,
+											offset: { x: this.getRandomInt(200, 250), y: 0 },
+											image: this.images["drone.png"]
+										}),
+										'period': this.getRandomInt(4000,10000)
+									}
 						this.objects.autoDrills.push(drill);
-						this.mainLayer.add(drill);
+						this.mainLayer.add(drill.image);
 					}
 					
-					if(this.autoDrillsAnimation != null) {
-						this.autoDrillsAnimation.stop();
+					if(this.autoDrillsAnimation == null) {
+						this.createAutoDrillsAnimation();
 					} 
-					this.createAutoDrillsAnimation();
+				},
+
+				getRandomInt: function(min, max) {
+					return Math.floor(Math.random() * (max - min + 1)) + min;
 				},
 
 				createAutoDrillsAnimation: function () {
@@ -78,22 +84,17 @@ angular.module('SpaceClickyGameApp', [])
 					var stage = this.mainStage;
 					var autoDrills = this.objects.autoDrills;
 					
-					var radius = 200;
-					var period = 5000;
-					var center = { x: stage.width()/2, y : stage.height()/2 };
-					
 					this.autoDrillsAnimation = new Kinetic.Animation(function(frame) {
 						for(var i = 0; i < autoDrills.length; i++) {
 							var autoDrill = autoDrills[i];
-							autoDrill.setX(radius * Math.cos(frame.time * 2 * Math.PI / period + i / (2 * Math.PI)) + center.x);
-							autoDrill.setY(radius * Math.sin(frame.time * 2 * Math.PI / period + i / (2 * Math.PI)) + center.y);
+							//autoDrill.setX(radius * Math.cos(frame.time * 2 * Math.PI / period + Math.PI * i / (Math.PI)));
+							//autoDrill.setY(radius * Math.sin(frame.time * 2 * Math.PI / period + Math.PI * i/ (Math.PI)));
+							var angleDiff = frame.timeDiff * ((360/(autoDrill.period/1000))/ 1000);
+							autoDrill.image.rotate(angleDiff)						
 						}
-						
-						
-					  }, layer);
+					}, layer);
 					 
 					this.autoDrillsAnimation.start();
-					  
 				},
 				
 				
@@ -146,7 +147,7 @@ angular.module('SpaceClickyGameApp', [])
 					this.mainLayer = new Kinetic.Layer();
 					this.mainStage.add(this.mainLayer);
 					this.loadImage("rock.png");
-					this.loadImage("bigdrill.png");
+					this.loadImage("drone.png");
 					
 				}				
 			};
@@ -166,14 +167,3 @@ angular.module('SpaceClickyGameApp', [])
 		templateUrl: 'templates/purchase.html'
 	}
 })
-/*
-.factory("Upgrade", function(){
-	function Upgrade(name, description, type, value, cost){
-		this.name = name;
-		this.description = description;
-		this.type = type;
-		this.value = value;
-		this.cost = cost;
-	}
-	return (Upgrade);
-});*/

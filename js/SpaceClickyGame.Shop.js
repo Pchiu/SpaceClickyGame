@@ -5,7 +5,7 @@ angular.module('SpaceClickyGameApp')
 		togglePurchasesMenu: function () {
 			this.purchaseMenuOpen = !this.purchaseMenuOpen;
 		},
-		purchaseOptions: GameObjects.upgrades,
+		purchaseOptions: GameObjects.tiers[Player.tier].upgrades,
 		purchaseUpgrade: function(purchase) {
 			
 			var player = Player;
@@ -38,4 +38,4 @@ angular.module('SpaceClickyGameApp')
 			}
 		}
 	}
-}]);
+}]	);
