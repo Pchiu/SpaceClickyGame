@@ -28,14 +28,7 @@ angular.module('SpaceClickyGameApp', [])
 		}
 	}, true);
 	
-	// Watch achievement conditions and complete achievements
-	angular.forEach($scope.achievements.list, function(ach){
-		$scope.$watch(ach.condition, function(){
-			if ($scope.achievements.completed[ach.id] == undefined && ach.condition()){
-				$scope.achievements.completeAchievement(ach);
-			}
-		});
-	});
+	$scope.achievements.setWatches($scope);
 	
 	$scope.clickButton = function() {
 		$scope.player.clicks += 1;
@@ -175,16 +168,5 @@ angular.module('SpaceClickyGameApp', [])
 			'purchase':'&onPurchase'
 		},
 		templateUrl: 'templates/purchase.html'
-	}
-})
-
-.directive('achievement',function(){
-	return{
-		restrict: 'E',
-		
-		scope: {
-			achievement:'='
-		},
-		templateUrl: 'templates/achievement.html'
 	}
 })

@@ -3,6 +3,7 @@ angular.module('SpaceClickyGameApp')
 	return {
 		completed: {},
 		
+		//TODO: toast when achievement completed
 		completeAchievement: function(ach){
 			this.completed[ach.id] = ach;
 		},
@@ -25,6 +26,27 @@ angular.module('SpaceClickyGameApp')
 					return Player.clicks >= 10;
 				}
 			}
-		]
+		],
+		
+		setWatches: function(scope){
+			// Watch achievement conditions and complete achievements
+			angular.forEach(this.list, function(ach){
+				scope.$watch(ach.condition, function(){
+					if (scope.achievements.completed[ach.id] == undefined && ach.condition()){	// This bit is weird and has weird scoping issues, need to fix
+						scope.achievements.completeAchievement(ach);
+					}
+				});
+			});
+		}
     };
-}]	);
+}]	)
+.directive('achievement',function(){
+	return{
+		restrict: 'E',
+		
+		scope: {
+			achievement:'='
+		},
+		templateUrl: 'templates/achievement.html'
+	}
+})
