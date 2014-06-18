@@ -1,6 +1,12 @@
 angular.module('SpaceClickyGameApp')
 .factory('GameObjects', function () {
 	return {
+		rocks: {
+				basicRock: {
+								'id': 'basicRock',
+								'imgpath':'images/rock.png'
+							 }
+				},
 		tiers: [
 				{
 					'id': 0,

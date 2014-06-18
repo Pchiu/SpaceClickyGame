@@ -1,5 +1,5 @@
 angular.module('SpaceClickyGameApp', [])
-.controller('SpaceController', ['$scope', '$timeout', 'Player', 'Shop', 
+.controller('SpaceController', ['$scope', '$timeout', 'Player', 'Shop',  
 		function ($scope, $timeout, Player, Shop) {
 	
 	$scope.player = Player;
@@ -34,7 +34,7 @@ angular.module('SpaceClickyGameApp', [])
 }])
 
 // Set up kinetic.js stage
-.directive('spaceClickyStage', function() {
+.directive('spaceClickyStage', ['GameObjects', function(GameObjects) {
 	return {
 		link: function (scope, element, attrs) {
 			scope.kineticCanvas = {
@@ -45,16 +45,24 @@ angular.module('SpaceClickyGameApp', [])
 				images: {},
 				mainStage: null,
 				mainLayer: null,
-				
-				objects: {
+				rock: null,
+				// StageItem: 
+				//		GameObject static
+				//		cached image file
+				//		
+				drawables: {
 					autoDrills: []
+				},
+
+				kineticImages: {
+
 				},
 				
 				setAutoDrillCount: function (count) {
-					while(this.objects.autoDrills.length > count) {
-						this.objects.autoDrills.pop();
+					while(this.drawables.autoDrills.length > count) {
+						this.drawables.autoDrills.pop();
 					}
-					while(this.objects.autoDrills.length < count) {
+					while(this.drawables.autoDrills.length < count) {
 						var drill = {
 										'image': new Kinetic.Image({
 											x: this.mainStage.width()/2,
@@ -66,38 +74,15 @@ angular.module('SpaceClickyGameApp', [])
 										}),
 										'period': this.getRandomInt(4000,10000)
 									}
-						this.objects.autoDrills.push(drill);
+						this.drawables.autoDrills.push(drill);
 						this.mainLayer.add(drill.image);
 					}
-					
-					if(this.autoDrillsAnimation == null) {
-						this.createAutoDrillsAnimation();
-					} 
 				},
 
 				getRandomInt: function(min, max) {
 					return Math.floor(Math.random() * (max - min + 1)) + min;
 				},
 
-				createAutoDrillsAnimation: function () {
-					var layer = this.mainLayer;
-					var stage = this.mainStage;
-					var autoDrills = this.objects.autoDrills;
-					
-					this.autoDrillsAnimation = new Kinetic.Animation(function(frame) {
-						for(var i = 0; i < autoDrills.length; i++) {
-							var autoDrill = autoDrills[i];
-							//autoDrill.setX(radius * Math.cos(frame.time * 2 * Math.PI / period + Math.PI * i / (Math.PI)));
-							//autoDrill.setY(radius * Math.sin(frame.time * 2 * Math.PI / period + Math.PI * i/ (Math.PI)));
-							var angleDiff = frame.timeDiff * ((360/(autoDrill.period/1000))/ 1000);
-							autoDrill.image.rotate(angleDiff)						
-						}
-					}, layer);
-					 
-					this.autoDrillsAnimation.start();
-				},
-				
-				
 				
 				resourceLoaded: function() {
 					this.numResourcesLoaded += 1;
@@ -116,15 +101,35 @@ angular.module('SpaceClickyGameApp', [])
 				},
 				
 				drawInitialItems: function() {
-					this.drawClickable(this.mainLayer, this.images["rock.png"], 100, 100);
+					console.log("drawing initial items");
+					this.rock = this.drawClickable(this.mainLayer, this.images["rock.png"], 100, 100, 250, 250);
 				},
 				
-				drawClickable: function(layer, image, x, y) {
+				drawClickable: function(layer, image, x, y, width, height) {
 					var clickable = new Kinetic.Image({
-						x: x,
-						y: y,
+						x: this.mainStage.width()/2,
+						y: this.mainStage.height()/2,
+						width: 250,
+						height: 250,
+						// offset: {x: 0, y: 0},
+						// offset: {x: 25, y:25},
+						// offset: {x: -25, y:-25},
+						offset: {x: 125, y: 125},
+						// offset: {x: -125, y: -125},
+						//offset: {x: width/2, y: height/2},
 						image: image
 					});
+
+			        // clickable = new Kinetic.Rect({
+			        //   x: 250,
+			        //   y: 250,
+			        //   width: 100,
+			        //   height: 100,
+			        //   fill: 'yellow',
+			        //   stroke: 'black',
+			        //   strokeWidth: 4,
+			        //   offset: {x:50, y:50}
+			        // });
 
 					clickable.on('click', function() {
 						scope.clickButton();
@@ -135,6 +140,7 @@ angular.module('SpaceClickyGameApp', [])
 					clickable.cache();
 					clickable.drawHitFromCache();
 					layer.draw();
+					return clickable;
 				},
 				
 				init: function() {
@@ -148,14 +154,28 @@ angular.module('SpaceClickyGameApp', [])
 					this.mainStage.add(this.mainLayer);
 					this.loadImage("rock.png");
 					this.loadImage("drone.png");
-					
+
+					var autoDrills = this.drawables.autoDrills;
+					this.mainAnimation = new Kinetic.Animation(function(frame) {
+						//TODO: for each drawable, compute animation.
+						for(var i = 0; i < autoDrills.length; i++) {
+							var autoDrill = autoDrills[i];
+							var angleDiff = frame.timeDiff * ((360/(autoDrill.period/1000))/ 1000);
+							autoDrill.image.rotate(angleDiff)						
+						}
+						if (scope.kineticCanvas.rock) {
+							scope.kineticCanvas.rock.rotate(frame.timeDiff * ((360/(20000/1000))/1000));
+						}
+					}, this.mainLayer);
+					 
+					this.mainAnimation.start();
 				}				
 			};
 			
 			scope.kineticCanvas.init();
 		}
 	}
-})
+}])
 .directive('purchase',function() {
 	return {
 		restrict: 'E',
