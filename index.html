@@ -50,14 +50,13 @@
 			
 			<div id="purchaseWindow" ng-if="shop.purchaseMenuOpen" class="row">
 				<purchase ng-repeat="purchaseOption in shop.purchaseOptions" purchase-option="purchaseOption" on-purchase="shop.purchaseUpgrade(purchaseOption)" class="col-md-6"></purchase>
-			</div>
-			
-			<p>Achievements:</p>
-			<achievement ng-repeat="achievement in achievements.completed" achievement="achievement"></achievement>
-			
+			</div>	
 		</div>
-		
-		
+
+	</div>
+	<div class="container" ng-controller="AchievementsController">
+		<p>Achievements:</p>
+		<achievement ng-repeat="achievement in achievements.completed" achievement="achievement"></achievement>
 	</div>
 	<!--
 	Canvas without KineticJS

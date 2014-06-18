@@ -26,20 +26,22 @@ angular.module('SpaceClickyGameApp')
 					return Player.clicks >= 10;
 				}
 			}
-		],
-		
-		setWatches: function(scope){
-			// Watch achievement conditions and complete achievements
-			angular.forEach(this.list, function(ach){
-				scope.$watch(ach.condition, function(){
-					if (scope.achievements.completed[ach.id] == undefined && ach.condition()){	// This bit is weird and has weird scoping issues, need to fix
-						scope.achievements.completeAchievement(ach);
-					}
-				});
-			});
-		}
+		]
     };
 }]	)
+.controller('AchievementsController', ['$scope', 'Achievements',
+		function ($scope, Achievements) {
+	//Add service watches for achievement conditions
+	$scope.achievements = Achievements;
+	// Watch achievement conditions and complete achievements
+	angular.forEach($scope.achievements.list, function(ach){
+		$scope.$watch(ach.condition, function(){
+			if ($scope.achievements.completed[ach.id] == undefined && ach.condition()){
+				$scope.achievements.completeAchievement(ach);
+			}
+		});
+	});
+}])
 .directive('achievement',function(){
 	return{
 		restrict: 'E',
