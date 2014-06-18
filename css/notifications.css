@@ -1,0 +1,17 @@
+notification-center {
+	left: 50%;
+	margin-left: -250px;
+
+	width: 500px;
+	position: fixed;
+	top: 0px;
+	z-index: 1;
+}
+
+notification.ng-enter {
+	animation: slideInDown 0.2s;
+}
+
+notification.ng-leave {
+	animation: slideOutUp 0.2s;
+}
