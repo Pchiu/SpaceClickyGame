@@ -10,6 +10,7 @@
 		<script src="js/SpaceClickyGame.Player.js"></script>
 		<script src="js/SpaceClickyGame.GameObjects.js"></script>
 		<script src="js/SpaceClickyGame.Shop.js"></script>
+		<script src="js/SpaceClickyGame.Achievements.js"></script>
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/items.css" rel="stylesheet">
 	</head>
@@ -50,6 +51,9 @@
 			<div id="purchaseWindow" ng-if="shop.purchaseMenuOpen" class="row">
 				<purchase ng-repeat="purchaseOption in shop.purchaseOptions" purchase-option="purchaseOption" on-purchase="shop.purchaseUpgrade(purchaseOption)" class="col-md-6"></purchase>
 			</div>
+			
+			<p>Achievements:</p>
+			<achievement ng-repeat="achievement in achievements.completed" achievement="achievement"></achievement>
 			
 		</div>
 		
