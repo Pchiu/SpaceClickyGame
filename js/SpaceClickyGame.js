@@ -211,8 +211,9 @@ GameEntity.prototype.sayID = function() {
 /********************************/
 
 var Drawable = function(gameObject, kineticLayer, position) {
-	GameEntity.call(this, gameObject, position);
 	this.kLayer = kineticLayer;
+	GameEntity.call(this, gameObject, position);
+
 	if (!this.kImage) {
 		this.kImage = new Kinetic.Image({
 			x: position.x,
@@ -246,6 +247,14 @@ Drawable.prototype.animate = function(frame) {
 Drawable.prototype.onLoadedImage = function() {
 	console.log("  width: " + this.gameObject.cachedImage.width + "   height: " + this.gameObject.cachedImage.height);
 	this.kImage.setImage(this.gameObject.cachedImage);
+	this.kImage.on('click', this.onClick);
+	this.kImage.cache();
+	this.kImage.drawHitFromCache();
+	this.kLayer.draw();
+};
+
+Drawable.prototype.onClick = function() {
+	console.log("CLICKED!");
 };
 
 
@@ -260,13 +269,13 @@ angular.extend(Clickable.prototype, Drawable.prototype);
 
 Clickable.prototype.onLoadedImage = function() {
 	console.log(this.gameObject.cachedImage.width + " IT'S A THING 2");
-	Drawable.prototype.onLoadedImage().call(this);
+	Drawable.prototype.onLoadedImage.call(this);
 	console.log(" applying clickable properties");
 };
 
-Clickable.prototype.onClick = function() {
-	console.log(" onClick");
-};
+// Clickable.prototype.onClick = function() {
+// 	console.log(" onClick");
+// };
 
 
 /********************************/
@@ -275,16 +284,14 @@ Clickable.prototype.onClick = function() {
 
 // TODO: wtf is the units of period?
 var Orbiter = function(gameObject, kineticLayer, orbitCenter, orbitDistance, orbitPeriod) {
-	Drawable.call(this, gameObject, kineticLayer, orbitCenter);
 	this.orbitDistance = orbitDistance;
 	this.orbitPeriod = orbitPeriod;
+	Drawable.call(this, gameObject, kineticLayer, orbitCenter);
 };
 angular.extend(Orbiter.prototype, Drawable.prototype);
 
 Orbiter.prototype.onLoadedImage = function() {
-	console.log(this.gameObject.cachedImage.width + " IT'S A THING 1");
-	Clickable.prototype.onLoadedImage().call(this); //TODO: remove?
-	console.log("  ORBITER ACTIVATED");
+	Drawable.prototype.onLoadedImage.call(this); //TODO: remove?
 	this.kImage.offset({x: this.gameObject.cachedImage.width/2 + this.orbitDistance, y: this.gameObject.cachedImage.height/2});
 };
 
@@ -297,10 +304,9 @@ Orbiter.prototype.animate = function(frame) {
 /********************************/
 
 var Asteroid = function(gameObject, kineticLayer, orbitCenter, orbitSpeed) {
-	Clickable.call(this, gameObject, kineticLayer, orbitCenter);
 	Orbiter.call(this, gameObject, kineticLayer, orbitCenter, 0, orbitSpeed);
 };
-angular.extend(Asteroid.prototype, Clickable.prototype, Orbiter.prototype);
+angular.extend(Asteroid.prototype, Orbiter.prototype);
 
 
 /********************************/
