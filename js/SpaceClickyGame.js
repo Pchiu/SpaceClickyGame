@@ -102,34 +102,18 @@ angular.module('SpaceClickyGameApp', [])
 				
 				drawInitialItems: function() {
 					console.log("drawing initial items");
-					this.rock = this.drawClickable(this.mainLayer, this.images["rock.png"], 100, 100, 250, 250);
+					this.rock = this.drawClickable(this.mainLayer, this.images["rock.png"], this.mainStage.width()/2, this.mainStage.height()/2, 250, 250);
 				},
 				
 				drawClickable: function(layer, image, x, y, width, height) {
 					var clickable = new Kinetic.Image({
-						x: this.mainStage.width()/2,
-						y: this.mainStage.height()/2,
-						width: 250,
-						height: 250,
-						// offset: {x: 0, y: 0},
-						// offset: {x: 25, y:25},
-						// offset: {x: -25, y:-25},
-						offset: {x: 125, y: 125},
-						// offset: {x: -125, y: -125},
-						//offset: {x: width/2, y: height/2},
+						x: x,
+						y: y,
+						width: width,
+						height: height,
+						offset: {x: width/2, y: height/2},
 						image: image
 					});
-
-			        // clickable = new Kinetic.Rect({
-			        //   x: 250,
-			        //   y: 250,
-			        //   width: 100,
-			        //   height: 100,
-			        //   fill: 'yellow',
-			        //   stroke: 'black',
-			        //   strokeWidth: 4,
-			        //   offset: {x:50, y:50}
-			        // });
 
 					clickable.on('click', function() {
 						scope.clickButton();
@@ -137,7 +121,7 @@ angular.module('SpaceClickyGameApp', [])
 					});
 
 					layer.add(clickable);
-					clickable.cache();
+					clickable.cache({x:-width/2, y:-height/2});
 					clickable.drawHitFromCache();
 					layer.draw();
 					return clickable;
@@ -164,7 +148,7 @@ angular.module('SpaceClickyGameApp', [])
 							autoDrill.image.rotate(angleDiff)						
 						}
 						if (scope.kineticCanvas.rock) {
-							scope.kineticCanvas.rock.rotate(frame.timeDiff * ((360/(20000/1000))/1000));
+							scope.kineticCanvas.rock.rotate(-frame.timeDiff * ((360/(80000/1000))/1000));
 						}
 					}, this.mainLayer);
 					 
