@@ -26,11 +26,6 @@ angular.module('SpaceClickyGameApp', [])
 			$scope.kineticCanvas.addDrone();
 		}
 	}, true);
-	
-	$scope.clickButton = function() {
-		$scope.player.clicks += 1;
-		$scope.player.money += 1.00 * $scope.player.multiplier;
-	};
 }])
 
 // Set up kinetic.js stage
@@ -60,15 +55,13 @@ angular.module('SpaceClickyGameApp', [])
 
 				setStage: function() {
 					/* Setting up the first asteroid */
-					this.addDrawable(new Asteroid(GameObjects.rocks.basicRock, this.mainLayer, {x:250, y:250}, -80000));
-
-					//TODO: add this money-getting logic somewhere onClick
-					// clickable.on('click', function() {
-					// 	// scope.clickButton();
-					// 	scope.player.clicks += 1;
-					// 	scope.player.money += 1.00 * scope.player.multiplier;
-					// 	scope.$apply();
-					// });
+					var moneyAstroid = new Asteroid(GameObjects.rocks.basicRock, this.mainLayer, {x:250, y:250}, -80000);
+					moneyAstroid.onClick = function() {
+						scope.player.clicks += 1;
+						scope.player.money += 1.00 * scope.player.multiplier;
+						scope.$apply();
+					};
+					this.addDrawable(moneyAstroid);
 				},
 
 				init: function() {
@@ -145,13 +138,11 @@ angular.extend(Drawable.prototype, GameEntity.prototype);
 
 Drawable.prototype.cacheImage = function(gameObject) { /* TODO: Should this function belong to the gameObject itself? */
 	if (!gameObject.cachedImage) {
-		console.log("Caching: " + gameObject.imgpath);
 		gameObject.cachedImage = new Image();
 		gameObject.cachedImage.onload = this.onLoadedImage.bind(this);
 		gameObject.cachedImage.src = gameObject.imgpath;
 	}
-	else {
-		console.log("Already cached: " + gameObject.imgpath);
+	else { // Image was already Cached, carry on.
 		this.onLoadedImage.call(this);
 	}
 };
@@ -161,12 +152,10 @@ Drawable.prototype.animate = function(frame) {
 };
 
 Drawable.prototype.onLoadedImage = function() {
-	console.log("  width: " + this.gameObject.cachedImage.width + "   height: " + this.gameObject.cachedImage.height);
 	this.kImage.setImage(this.gameObject.cachedImage);
 	this.kImage.on('click', this.onClick.bind(this));
 	this.kImage.cache();
 	this.kImage.drawHitFromCache();
-	this.kLayer.draw();
 };
 
 Drawable.prototype.onClick = function() {
