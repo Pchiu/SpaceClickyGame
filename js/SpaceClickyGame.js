@@ -68,7 +68,8 @@ angular.module('SpaceClickyGameApp', [])
 											y: this.mainStage.height()/2,
 											width: 38,
 											height: 50,
-											offset: { x: this.getRandomInt(200, 250), y: 0 },
+											// offset: { x: this.getRandomInt(200, 250), y: 0 },
+											offset: { x: 38/2, y: 50/2 },
 											image: this.images["drone.png"]
 										}),
 										'period': this.getRandomInt(4000,10000)
@@ -103,7 +104,8 @@ angular.module('SpaceClickyGameApp', [])
 				drawInitialItems: function() {
 					console.log("drawing initial items");
 					this.rock = this.drawClickable(this.mainLayer, this.images["rock.png"], 
-								 this.mainStage.width()/2, this.mainStage.height()/2, 250, 250);
+								 // this.mainStage.width()/2, this.mainStage.height()/2, 250, 250);
+								 this.mainStage.width(), this.mainStage.height(), 250, 250);
 				},
 				
 				drawClickable: function(layer, image, x, y, width, height) {
@@ -145,10 +147,9 @@ angular.module('SpaceClickyGameApp', [])
 					/* DEBUG */
 					var drill = new Drawable(GameObjects.drones.autoDrill, {x:0, y:0}, this.mainLayer);
 					drill.sayID();
-					drill.image.position({x: 0, y: 200});
 					var drill2 = new Drawable(GameObjects.drones.autoDrill, {x:50, y:50}, this.mainLayer);
 					drill2.sayID();
-					var rock = new Clickable(GameObjects.rocks.basicRock, {x:250, y:250}, this.mainLayer);
+					var rock = new Asteroid(GameObjects.rocks.basicRock, this.mainLayer, {x:250, y:250});
 					rock.sayID();
 					/* UNDEBUG */
 
@@ -163,6 +164,7 @@ angular.module('SpaceClickyGameApp', [])
 						if (scope.kineticCanvas.rock) {
 							scope.kineticCanvas.rock.rotate(-frame.timeDiff * ((360/(80000/1000))/1000));
 						}
+						rock.animate(frame);
 					}, this.mainLayer);
 					 
 					this.mainAnimation.start();
@@ -208,14 +210,14 @@ GameEntity.prototype.sayID = function() {
 var Drawable = function(gameObject, position, kineticLayer) {
 	GameEntity.call(this, gameObject, position);
 	this.cacheImage(gameObject);
-	this.layer = kineticLayer;
-	this.image = new Kinetic.Image({
+	this.kLayer = kineticLayer;
+	this.kImage = new Kinetic.Image({
 		x: position.x,
 		y: position.y,
 		image: gameObject.cachedImage
 	});
 	// TODO: offset and animation for "Orbiters"
-	this.layer.add(this.image);
+	this.kLayer.add(this.kImage);
 };
 angular.extend(Drawable.prototype, GameEntity.prototype);
 
@@ -232,7 +234,7 @@ Drawable.prototype.cacheImage = function(gameObject) { /* TODO: Should this func
 };
 
 Drawable.prototype.animate = function(frame) {
-
+	console.log("no animation present for " + this.id);
 };
 
 Drawable.prototype.onLoadedImage = function() {
@@ -251,4 +253,39 @@ angular.extend(Clickable.prototype, Drawable.prototype);
 
 Clickable.prototype.onLoadedImage = function() {
 	console.log(" applying clickable properties");
-}
+};
+
+Clickable.prototype.onClick = function() {
+	console.log(" onClick");
+};
+
+
+/********************************/
+/* A new file should start here */
+/********************************/
+
+// TODO: move kineticLayer to 2nd position of the above constructors
+var Orbiter = function(gameObject, kineticLayer, orbitCenter, orbitDistance) {
+	Drawable.call(this, gameObject, orbitCenter, kineticLayer);
+};
+angular.extend(Orbiter.prototype, Drawable.prototype);
+
+Orbiter.prototype.onLoadedImage = function() {
+	console.log("  ORBITER ACTIVATED");
+	this.kImage.offset({x: this.gameObject.cachedImage.width/2, y: this.gameObject.cachedImage.height/2});
+};
+
+Orbiter.prototype.animate = function(frame) {
+	this.kImage.rotate(-frame.timeDiff * ((360/(80000/1000))/1000));
+};
+
+/********************************/
+/* A new file should start here */
+/********************************/
+
+var Asteroid = function(gameObject, kineticLayer, orbitCenter) {
+	Clickable.call(this, gameObject, orbitCenter, kineticLayer);
+	Orbiter.call(this, gameObject, kineticLayer, orbitCenter, 0);
+};
+
+angular.extend(Asteroid.prototype, Clickable.prototype, Orbiter.prototype);
