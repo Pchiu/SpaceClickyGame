@@ -1,11 +1,12 @@
 angular.module('SpaceClickyGameApp')
-.factory('Achievements', ['Player', function (Player) {
+.factory('Achievements', ['Player', 'NotificationCenter', function (Player, NotificationCenter) {
 	return {
 		completed: {},
 		
 		//TODO: toast when achievement completed
 		completeAchievement: function(ach){
 			this.completed[ach.id] = ach;
+			NotificationCenter.addNotification("Achievement unlocked!", ach.title, 3000);
 		},
 		
 		//TODO: create sorted ID scheme or sort completed list so cheevos are categorized correctly
