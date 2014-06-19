@@ -94,6 +94,12 @@ angular.module('SpaceClickyGameApp', [])
 					var targetNode = this.findNode(spriteGroup.root, parentNodeName);
 					if (targetNode == null)
 					{
+						console.log("Failed to find a node with the name '" + parentNodeName + "'.")
+						return;
+					}
+					if (targetNode.id == childNodeName)
+					{
+						console.log("A node with the name '" + childNodeName + "' already exists!")
 						return;
 					}
 					var previousXOffset = 0;
