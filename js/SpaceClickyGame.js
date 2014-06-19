@@ -145,6 +145,7 @@ angular.module('SpaceClickyGameApp', [])
 					/* DEBUG */
 					var drill = new Drawable(GameObjects.drones.autoDrill, {x:0, y:0}, this.mainLayer);
 					drill.sayID();
+					drill.image.position({x: 0, y: 200});
 					var drill2 = new Drawable(GameObjects.drones.autoDrill, {x:50, y:50}, this.mainLayer);
 					drill2.sayID();
 					var rock = new Clickable(GameObjects.rocks.basicRock, {x:250, y:250}, this.mainLayer);
@@ -191,7 +192,8 @@ angular.module('SpaceClickyGameApp', [])
 
 var GameEntity = function(gameObject, position) {
 	this.id = gameObject.id;
-	this.position = position;
+	this.position = position; // TODO: Should this be here?
+	this.gameObject = gameObject;
 };
 
 GameEntity.prototype.sayID = function() {
@@ -212,17 +214,17 @@ var Drawable = function(gameObject, position, kineticLayer) {
 		y: position.y,
 		image: gameObject.cachedImage
 	});
-	// TODO: offset and animation for orbiters
+	// TODO: offset and animation for "Orbiters"
 	this.layer.add(this.image);
 };
 angular.extend(Drawable.prototype, GameEntity.prototype);
 
-Drawable.prototype.cacheImage = function(gameObject) { /* Should this function belong to the gameObject? */
+Drawable.prototype.cacheImage = function(gameObject) { /* TODO: Should this function belong to the gameObject itself? */
 	if (!gameObject.cachedImage) {
 		console.log("Caching: " + gameObject.imgpath);
 		gameObject.cachedImage = new Image();
+		gameObject.cachedImage.onload = this.onLoadedImage.bind(this);
 		gameObject.cachedImage.src = gameObject.imgpath;
-		console.log("  width: " + gameObject.cachedImage.width + "   height: " + gameObject.cachedImage.height);
 	}
 	else {
 		console.log("Already cached: " + gameObject.imgpath);
@@ -233,6 +235,10 @@ Drawable.prototype.animate = function(frame) {
 
 };
 
+Drawable.prototype.onLoadedImage = function() {
+	console.log("  width: " + this.gameObject.cachedImage.width + "   height: " + this.gameObject.cachedImage.height);
+};
+
 
 /********************************/
 /* A new file should start here */
@@ -241,4 +247,8 @@ Drawable.prototype.animate = function(frame) {
 var Clickable = function(gameObject, position, kineticLayer) {
 	Drawable.call(this, gameObject, position, kineticLayer);
 };
-angular.extend(Clickable.prototype, Drawable.prototype)
+angular.extend(Clickable.prototype, Drawable.prototype);
+
+Clickable.prototype.onLoadedImage = function() {
+	console.log(" applying clickable properties");
+}

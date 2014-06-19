@@ -5,7 +5,7 @@ angular.module('SpaceClickyGameApp')
 		rocks: {
 			basicRock: {
 				'id': 'basicRock',
-				'imgpath':'images/rock.png'
+				'imgpath':'images/Shittyrock2.png'
 		    }
 		},
 		drones: {
