@@ -212,17 +212,17 @@ GameEntity.prototype.sayID = function() {
 
 var Drawable = function(gameObject, kineticLayer, position) {
 	GameEntity.call(this, gameObject, position);
-	this.cacheImage(gameObject);
 	this.kLayer = kineticLayer;
 	if (!this.kImage) {
 		this.kImage = new Kinetic.Image({
 			x: position.x,
 			y: position.y,
-			image: gameObject.cachedImage
+			// image: gameObject.cachedImage
 		});
 		// TODO: offset and animation for "Orbiters"
 		this.kLayer.add(this.kImage);
 	}
+	this.cacheImage(gameObject);
 };
 angular.extend(Drawable.prototype, GameEntity.prototype);
 
@@ -235,6 +235,7 @@ Drawable.prototype.cacheImage = function(gameObject) { /* TODO: Should this func
 	}
 	else {
 		console.log("Already cached: " + gameObject.imgpath);
+		this.onLoadedImage.call(this);
 	}
 };
 
@@ -244,6 +245,7 @@ Drawable.prototype.animate = function(frame) {
 
 Drawable.prototype.onLoadedImage = function() {
 	console.log("  width: " + this.gameObject.cachedImage.width + "   height: " + this.gameObject.cachedImage.height);
+	this.kImage.setImage(this.gameObject.cachedImage);
 };
 
 
@@ -257,6 +259,8 @@ var Clickable = function(gameObject, kineticLayer, position) {
 angular.extend(Clickable.prototype, Drawable.prototype);
 
 Clickable.prototype.onLoadedImage = function() {
+	console.log(this.gameObject.cachedImage.width + " IT'S A THING 2");
+	Drawable.prototype.onLoadedImage().call(this);
 	console.log(" applying clickable properties");
 };
 
@@ -278,7 +282,8 @@ var Orbiter = function(gameObject, kineticLayer, orbitCenter, orbitDistance, orb
 angular.extend(Orbiter.prototype, Drawable.prototype);
 
 Orbiter.prototype.onLoadedImage = function() {
-	Clickable.prototype.onLoadedImage(); //TODO: remove?
+	console.log(this.gameObject.cachedImage.width + " IT'S A THING 1");
+	Clickable.prototype.onLoadedImage().call(this); //TODO: remove?
 	console.log("  ORBITER ACTIVATED");
 	this.kImage.offset({x: this.gameObject.cachedImage.width/2 + this.orbitDistance, y: this.gameObject.cachedImage.height/2});
 };
