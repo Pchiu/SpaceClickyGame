@@ -55,28 +55,70 @@ angular.module('SpaceClickyGameApp', [])
 						this.objects.autoDrills.pop();
 					}
 					while(this.objects.autoDrills.length < count) {
-						var drill = {
-										'image': new Kinetic.Image({
-											x: this.mainStage.width()/2,
-											y: this.mainStage.height()/2,
-											width: 38,
-											height: 50,
-											offset: { x: this.getRandomInt(200, 250), y: 0 },
-											image: this.images["drone.png"]
-										}),
-										'period': this.getRandomInt(4000,10000)
-									}
+						var droneSprite = {
+										'anchorPoints': [{'x': 18, 'y': 0}],
+										'imageName': 'drone.png'
+									};
+						var drillSprite = {
+										'anchorPoints': [{'x': 8, 'y': 18}],
+										'imageName': 'drill.png'
+									};
+						var spriteGroup = this.createSpriteGroup(droneSprite, this.mainStage.width()/2, this.mainStage.height()/2);
+						this.addChildToSpriteGroup(spriteGroup, drillSprite, 0, 0)
+
+						var drill = { 'spriteGroup': spriteGroup,
+									  'period': this.getRandomInt(4000, 10000)
+						}
 						this.objects.autoDrills.push(drill);
-						this.mainLayer.add(drill.image);
+
 					}
-					
+					this.mainLayer.add(drill.spriteGroup.imageGroup);
 					if(this.autoDrillsAnimation == null) {
 						this.createAutoDrillsAnimation();
 					} 
 				},
-
+				
 				getRandomInt: function(min, max) {
 					return Math.floor(Math.random() * (max - min + 1)) + min;
+				},
+
+				createImageGroup: function(parent, children) {
+					if (children.length != parent.anchorPoints.length)
+					{
+						return null;
+					}
+				},
+
+				addChildToSpriteGroup: function(spriteGroup, child, parentAnchorIndex, childAnchorIndex)
+				{
+					if (childAnchorIndex >= spriteGroup.anchorPoints.length)
+					{
+						return null
+					}
+					var childSprite = new Kinetic.Image({
+						x: spriteGroup.anchorPoints[parentAnchorIndex].x - child.anchorPoints[childAnchorIndex].x,
+						y: spriteGroup.anchorPoints[parentAnchorIndex].y - child.anchorPoints[childAnchorIndex].y,
+						image: this.images[child.imageName]
+					})
+					spriteGroup.imageGroup.add(childSprite)
+				},
+
+				createSpriteGroup: function(parent, x, y) {
+					var imageGroup = new Kinetic.Group({
+						x: x,
+						y: y
+					})
+					var parentImage = new Kinetic.Image({
+						image: this.images[parent.imageName]
+					})
+					imageGroup.offsetX(parentImage.width()/2)
+					imageGroup.offsetY(parentImage.height()/2)
+					imageGroup.add(parentImage)
+					var spriteGroup = {
+										'anchorPoints': parent.anchorPoints,
+										'imageGroup': imageGroup
+					}
+					return spriteGroup
 				},
 
 				createAutoDrillsAnimation: function () {
@@ -90,7 +132,9 @@ angular.module('SpaceClickyGameApp', [])
 							//autoDrill.setX(radius * Math.cos(frame.time * 2 * Math.PI / period + Math.PI * i / (Math.PI)));
 							//autoDrill.setY(radius * Math.sin(frame.time * 2 * Math.PI / period + Math.PI * i/ (Math.PI)));
 							var angleDiff = frame.timeDiff * ((360/(autoDrill.period/1000))/ 1000);
-							autoDrill.image.rotate(angleDiff)						
+							autoDrill.spriteGroup.imageGroup.offsetX(18);
+							autoDrill.spriteGroup.imageGroup.offsetY(-19);
+							autoDrill.spriteGroup.imageGroup.rotate(angleDiff)						
 						}
 					}, layer);
 					 
@@ -148,6 +192,7 @@ angular.module('SpaceClickyGameApp', [])
 					this.mainStage.add(this.mainLayer);
 					this.loadImage("rock.png");
 					this.loadImage("drone.png");
+					this.loadImage("drill.png");
 					
 				}				
 			};

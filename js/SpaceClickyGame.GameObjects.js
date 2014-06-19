@@ -7,13 +7,14 @@ angular.module('SpaceClickyGameApp')
 					'name': 'Mining Operation',
 					upgrades: [
 						{
-							'id':'bigDrill',
-							'name':'Big drill',
-							'description':'A big drill',
+							'id':'drill',
+							'name':'Drill',
+							'description':'A drill',
 							'value': 1,
 							'costincrease': 1.15,
 							'cost':10,
-							'imgpath':'images/bigdrill.png'
+							'imgpath':'images/bigdrill.png',
+							'anchorPoints': [{'x':9, 'y':18}]
 						},
 						{ 
 							'id':'biggerDrill',
@@ -33,7 +34,8 @@ angular.module('SpaceClickyGameApp')
 							'costincrease': 1.15,
 							'maximum': 50,
 							'cost':30,
-							'imgpath': 'images/drone.png'
+							'imgpath': 'images/drone.png',
+							'anchorPoints': [{'x': 18, 'y':0}]
 						}
 					]
 				},
