@@ -11,19 +11,43 @@ angular.module('SpaceClickyGameApp')
 		//TODO: create sorted ID scheme or sort completed list so cheevos are categorized correctly
 		list: [
 			{
-				'id': 'click005',
-				'title': 'Entrepreneur',
-				'description': 'Clicked 5 times',
+				'id': 'click001',
+				'title': 'Getting Things Rolling',
+				'description': 'Clicked once',
 				'condition': function(){
-					return Player.clicks >= 5;
+					return Player.clicks >= 1;
 				}
 			},
 			{
-				'id': 'click010',
-				'title': 'Businessman',
-				'description': 'Clicked 10 times',
+				'id': 'click002',
+				'title': "Diggin' it",
+				'description': 'Clicked twice',
 				'condition': function(){
-					return Player.clicks >= 10;
+					return Player.clicks >= 2;
+				}
+			},
+			{
+				'id': 'click003',
+				'title': 'Rocking out',
+				'description': 'Clicked thrice',
+				'condition': function(){
+					return Player.clicks >= 3;
+				}
+			},
+			{
+				'id': 'click004',
+				'title': 'You Rock!',
+				'description': 'Clicked 4 times',
+				'condition': function(){
+					return Player.clicks >= 4;
+				}
+			},
+			{
+				'id': 'click005',
+				'title': 'Rock Star',
+				'description': 'Clicked 5 times',
+				'condition': function(){
+					return Player.clicks >= 5;
 				}
 			}
 		]
