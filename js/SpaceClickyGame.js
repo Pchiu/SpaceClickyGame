@@ -85,13 +85,6 @@ angular.module('SpaceClickyGameApp', [])
 					return Math.floor(Math.random() * (max - min + 1)) + min;
 				},
 
-				createImageGroup: function(parent, children) {
-					if (children.length != parent.anchorPoints.length)
-					{
-						return null;
-					}
-				},
-
 				addChildToSpriteGroup: function(spriteGroup, parent, child, parentAnchorIndex, childAnchorIndex)
 				{
 					var parentAnchors = spriteGroup[parent];
