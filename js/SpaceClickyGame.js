@@ -1,3 +1,5 @@
+
+
 angular.module('SpaceClickyGameApp', [])
 .controller('SpaceController', ['$scope', '$timeout', 'Player', 'Shop',  
 		function ($scope, $timeout, Player, Shop) {
@@ -46,10 +48,7 @@ angular.module('SpaceClickyGameApp', [])
 				mainStage: null,
 				mainLayer: null,
 				rock: null,
-				// StageItem: 
-				//		GameObject static
-				//		cached image file
-				//		
+
 				drawables: {
 					autoDrills: []
 				},
@@ -100,9 +99,11 @@ angular.module('SpaceClickyGameApp', [])
 					this.images[name].src = "images/" + name;
 				},
 				
+				// TODO: rename to setupStageItems
 				drawInitialItems: function() {
 					console.log("drawing initial items");
-					this.rock = this.drawClickable(this.mainLayer, this.images["rock.png"], this.mainStage.width()/2, this.mainStage.height()/2, 250, 250);
+					this.rock = this.drawClickable(this.mainLayer, this.images["rock.png"], 
+								 this.mainStage.width()/2, this.mainStage.height()/2, 250, 250);
 				},
 				
 				drawClickable: function(layer, image, x, y, width, height) {
@@ -116,7 +117,9 @@ angular.module('SpaceClickyGameApp', [])
 					});
 
 					clickable.on('click', function() {
-						scope.clickButton();
+						// scope.clickButton();
+						scope.player.clicks += 1;
+						scope.player.money += 1.00 * scope.player.multiplier;
 						scope.$apply();
 					});
 
@@ -138,6 +141,15 @@ angular.module('SpaceClickyGameApp', [])
 					this.mainStage.add(this.mainLayer);
 					this.loadImage("rock.png");
 					this.loadImage("drone.png");
+
+					/* DEBUG */
+					var drill = new Drawable(GameObjects.drones.autoDrill, {x:0, y:0}, this.mainLayer);
+					drill.sayID();
+					var drill2 = new Drawable(GameObjects.drones.autoDrill, {x:50, y:50}, this.mainLayer);
+					drill2.sayID();
+					var rock = new Clickable(GameObjects.rocks.basicRock, {x:250, y:250}, this.mainLayer);
+					rock.sayID();
+					/* UNDEBUG */
 
 					var autoDrills = this.drawables.autoDrills;
 					this.mainAnimation = new Kinetic.Animation(function(frame) {
@@ -171,3 +183,62 @@ angular.module('SpaceClickyGameApp', [])
 		templateUrl: 'templates/purchase.html'
 	}
 })
+
+
+/********************************/
+/* A new file should start here */
+/********************************/
+
+var GameEntity = function(gameObject, position) {
+	this.id = gameObject.id;
+	this.position = position;
+};
+
+GameEntity.prototype.sayID = function() {
+	console.log("Hello, my ID is " + this.id);
+};
+
+
+/********************************/
+/* A new file should start here */
+/********************************/
+
+var Drawable = function(gameObject, position, kineticLayer) {
+	GameEntity.call(this, gameObject, position);
+	this.cacheImage(gameObject);
+	this.layer = kineticLayer;
+	this.image = new Kinetic.Image({
+		x: position.x,
+		y: position.y,
+		image: gameObject.cachedImage
+	});
+	// TODO: offset and animation for orbiters
+	this.layer.add(this.image);
+};
+angular.extend(Drawable.prototype, GameEntity.prototype);
+
+Drawable.prototype.cacheImage = function(gameObject) { /* Should this function belong to the gameObject? */
+	if (!gameObject.cachedImage) {
+		console.log("Caching: " + gameObject.imgpath);
+		gameObject.cachedImage = new Image();
+		gameObject.cachedImage.src = gameObject.imgpath;
+		console.log("  width: " + gameObject.cachedImage.width + "   height: " + gameObject.cachedImage.height);
+	}
+	else {
+		console.log("Already cached: " + gameObject.imgpath);
+	}
+};
+
+Drawable.prototype.animate = function(frame) {
+
+};
+
+
+/********************************/
+/* A new file should start here */
+/********************************/
+
+var Clickable = function(gameObject, position, kineticLayer) {
+	Drawable.call(this, gameObject, position, kineticLayer);
+};
+angular.extend(Clickable.prototype, Drawable.prototype)
