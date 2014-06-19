@@ -18,7 +18,7 @@ angular.module('SpaceClickyGameApp')
 				};
 			}
 			if(purchase.maximum != null && player.purchasedUpgrades[purchase.id].amountOwned >= purchase.maximum) {
-				NotificationCenter.addError('','You cannot have any more ' + purchase.name);
+				NotificationCenter.addError('','You cannot have any more ' + purchase.name, 2000);
 				return;
 			}
 			if(player.spendMoney(purchase.cost)) {

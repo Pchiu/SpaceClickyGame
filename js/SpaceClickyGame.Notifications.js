@@ -1,8 +1,6 @@
 angular.module('SpaceClickyGameApp')
 .factory('NotificationCenter', ['$timeout',function ($timeout) {
 	return {
-
-		notificationDuration: 5000,
 		maximumDisplayed: 5,
 
 		activeNotifications: [
@@ -11,10 +9,10 @@ angular.module('SpaceClickyGameApp')
 		
 		timers: [],
 		
-		addError: function (title, text) {
-			this.addNotificationType(title,text,'error');
+		addError: function (title, text, duration) {
+			this.addNotificationType(title,text,'error',duration);
 		},
-		addNotification: function (title, text) {
+		addNotification: function (title, text, duration) {
 			this.addNotificationType(title,text,'');
 		},
 		removeNotificationAtIndex: function(index) {
@@ -24,9 +22,7 @@ angular.module('SpaceClickyGameApp')
 			this.activeNotifications.splice(index,1);
 			this.timers.splice(index,1);
 		},
-		addNotificationType: function (title, text, type) {
-
-		addNotification: function (title, text, duration) {
+		addNotificationType: function (title, text, type, duration) {
 			if(typeof duration === 'undefined'){
 				duration = 5000;	//TODO: dynamic duration based on body text length
 			}
@@ -57,8 +53,7 @@ angular.module('SpaceClickyGameApp')
 			notification.close = function () {
 				dismiss();
 			}
-			var timer = $timeout(dismiss,this.notificationDuration);
-			var timer = $timeout(expire,duration);
+			var timer = $timeout(dismiss,duration);
 			
 			this.timers.push(timer);
 		},
