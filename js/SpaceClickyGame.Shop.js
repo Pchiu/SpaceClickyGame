@@ -1,5 +1,5 @@
 angular.module('SpaceClickyGameApp')
-.factory('Shop', ['Player','GameObjects', function (Player, GameObjects) {
+.factory('Shop', ['Player','GameObjects', 'NotificationCenter', function (Player, GameObjects, NotificationCenter) {
 	return {
 		purchaseMenuOpen: false,
 		togglePurchasesMenu: function () {
@@ -32,7 +32,8 @@ angular.module('SpaceClickyGameApp')
 				}
 				
 				purchase.cost *= purchase.costincrease;
-				console.log('Purchased ' + purchase.name);
+				
+				NotificationCenter.addNotification('Purchased ' + purchase.name);
 			} else {
 				console.log('Not enough money');
 			}
