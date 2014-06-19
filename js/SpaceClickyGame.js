@@ -66,7 +66,7 @@ angular.module('SpaceClickyGameApp', [])
 						var spriteGroup = this.createSpriteGroup(droneSprite, this.mainStage.width()/2, this.mainStage.height()/2);
 						
 						
-						this.addChildToSpriteGroup(spriteGroup, "drone", drillSprite, 0, 0)
+						this.addChildToSpriteGroup(spriteGroup, "drone0", drillSprite, 0, 0)
 						
 						var drill = { 'spriteGroup': spriteGroup,
 									  'period': this.getRandomInt(4000, 10000)
@@ -94,7 +94,6 @@ angular.module('SpaceClickyGameApp', [])
 
 				addChildToSpriteGroup: function(spriteGroup, parent, child, parentAnchorIndex, childAnchorIndex)
 				{
-					
 					var parentAnchors = spriteGroup[parent];
 					if (childAnchorIndex >= parentAnchors.length)
 					{
@@ -105,7 +104,12 @@ angular.module('SpaceClickyGameApp', [])
 						y: parentAnchors[parentAnchorIndex].y - child.anchorPoints[childAnchorIndex].y,
 						image: this.images[child.imageName + ".png"]
 					})
-					spriteGroup[child.imageName] = child.anchorPoints;
+					var index = 0;
+					while (spriteGroup[child.imageName + index] != null)
+					{
+						index++;
+					}
+					spriteGroup[child.imageName + index] = child.anchorPoints;
 					spriteGroup.imageGroup.add(childSprite);
 				},
 
@@ -118,12 +122,12 @@ angular.module('SpaceClickyGameApp', [])
 						image: this.images[parent.imageName + ".png"]
 					})
 					imageGroup.offsetX(parentImage.width()/2)
-					imageGroup.offsetY(parentImage.height()/2)
+					imageGroup.offsetY(parentImage.height()/2)	
 					imageGroup.add(parentImage)
 					var spriteGroup = {
 										'imageGroup': imageGroup
 					}
-					spriteGroup[parent.imageName] = parent.anchorPoints
+					spriteGroup[parent.imageName + "0"] = parent.anchorPoints
 					return spriteGroup
 				},
 
@@ -146,8 +150,6 @@ angular.module('SpaceClickyGameApp', [])
 					 
 					this.autoDrillsAnimation.start();
 				},
-				
-				
 				
 				resourceLoaded: function() {
 					this.numResourcesLoaded += 1;
