@@ -1,5 +1,5 @@
 angular.module('SpaceClickyGameApp')
-.factory('Shop', ['Player','GameObjects', function (Player, GameObjects) {
+.factory('Shop', ['Player','GameObjects', 'NotificationCenter', function (Player, GameObjects, NotificationCenter) {
 	return {
 		purchaseMenuOpen: false,
 		togglePurchasesMenu: function () {
@@ -18,7 +18,7 @@ angular.module('SpaceClickyGameApp')
 				};
 			}
 			if(purchase.maximum != null && player.purchasedUpgrades[purchase.id].amountOwned >= purchase.maximum) {
-				console.log("You cannot have any more of these");
+				NotificationCenter.addError('','You cannot have any more ' + purchase.name, 2000);
 				return;
 			}
 			if(player.spendMoney(purchase.cost)) {
@@ -32,9 +32,10 @@ angular.module('SpaceClickyGameApp')
 				}
 				
 				purchase.cost *= purchase.costincrease;
-				console.log('Purchased ' + purchase.name);
+				
+				NotificationCenter.addNotification('Purchased', purchase.name);
 			} else {
-				console.log('Not enough money');
+				NotificationCenter.addError('','You do not have enough money');
 			}
 		}
 	}
