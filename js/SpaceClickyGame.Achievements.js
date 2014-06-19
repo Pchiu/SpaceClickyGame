@@ -50,6 +50,30 @@ angular.module('SpaceClickyGameApp')
 				'condition': function(){
 					return Player.clicks >= 5;
 				}
+			},
+			{
+				'id': 'bigDrill001',
+				'title': 'Drill Baby Drill',
+				'description': 'Bought a big drill',
+				'condition': function(){
+					return Player.purchasedUpgrades['bigDrill'].amountOwned >=1;
+				}
+			},
+			{
+				'id': 'biggerDrill001',
+				'title': 'Drill Sergeant',
+				'description': 'Bought an even biger drill',
+				'condition': function(){
+					return Player.purchasedUpgrades['biggerDrill'].amountOwned >=1;
+				}
+			},
+			{
+				'id': 'miningDrone001',
+				'title': 'I AM SPIRALING OUT OF CONTROL',
+				'description': 'Bought an auto drill',
+				'condition': function() {
+					return Player.purchasedUpgrades['autoDrill'].amountOwned >=1;
+				}
 			}
 		]
     };
