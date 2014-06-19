@@ -6,7 +6,7 @@ angular.module('SpaceClickyGameApp')
 		//TODO: toast when achievement completed
 		completeAchievement: function(ach){
 			this.completed[ach.id] = ach;
-			NotificationCenter.addNotification("Achievement unlocked!", ach.title, 3000);
+			NotificationCenter.addNotification("Achievement Unlocked!", ach.title, 3000);
 		},
 		
 		//TODO: create sorted ID scheme or sort completed list so cheevos are categorized correctly
@@ -62,7 +62,7 @@ angular.module('SpaceClickyGameApp')
 			{
 				'id': 'biggerDrill001',
 				'title': 'Drill Sergeant',
-				'description': 'Bought an even biger drill',
+				'description': 'Bought an even bigger drill',
 				'condition': function(){
 					return Player.purchasedUpgrades['biggerDrill'].amountOwned >=1;
 				}
