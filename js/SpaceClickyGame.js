@@ -46,7 +46,7 @@ angular.module('SpaceClickyGameApp', [])
 
 				addDrone: function() {
 					this.addDrawable(new Drone(GameObjects.drones.autoDrill, this.mainLayer, {x:250, y:250},
-										 this.getRandomInt(200,250), 20000));
+										 this.getRandomInt(200,250), this.getRandomInt(7000,25000)));
 				},
 
 				getRandomInt: function(min, max) {
