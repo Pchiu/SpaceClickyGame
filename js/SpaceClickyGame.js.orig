@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 angular.module('SpaceClickyGameApp', ['ngAnimate'])
 .controller('SpaceController', ['$scope', '$timeout', 'Player', 'Shop', 'NotificationCenter',
 		function ($scope, $timeout, Player, Shop, NotificationCenter) {
+=======
+angular.module('SpaceClickyGameApp', [])
+.controller('SpaceController', ['$scope', '$timeout', 'Player', 'Shop',  
+		function ($scope, $timeout, Player, Shop) {
+>>>>>>> oliverdoaner/rotate-rock
 	
 	$scope.player = Player;
 	$scope.shop = Shop;

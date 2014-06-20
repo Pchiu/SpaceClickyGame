@@ -56,7 +56,12 @@ angular.module('SpaceClickyGameApp')
 				'title': 'Drill Baby Drill',
 				'description': 'Bought a big drill',
 				'condition': function(){
-					return Player.purchasedUpgrades['bigDrill'].amountOwned >=1;
+					if (Player.purchasedUpgrades['bigDrill']) {
+						return Player.purchasedUpgrades['bigDrill'].amountOwned >=1;
+					}
+					else {
+						return false;
+					}
 				}
 			},
 			{
@@ -64,7 +69,12 @@ angular.module('SpaceClickyGameApp')
 				'title': 'Drill Sergeant',
 				'description': 'Bought an even bigger drill',
 				'condition': function(){
-					return Player.purchasedUpgrades['biggerDrill'].amountOwned >=1;
+					if (Player.purchasedUpgrades['biggerDrill']) {
+						return Player.purchasedUpgrades['biggerDrill'].amountOwned >=1;
+					}
+					else {
+						return false;
+					}
 				}
 			},
 			{
@@ -72,7 +82,12 @@ angular.module('SpaceClickyGameApp')
 				'title': 'I AM SPIRALING OUT OF CONTROL',
 				'description': 'Bought an auto drill',
 				'condition': function() {
-					return Player.purchasedUpgrades['autoDrill'].amountOwned >=1;
+					if (Player.purchasedUpgrades['autoDrill']) {
+						return Player.purchasedUpgrades['autoDrill'].amountOwned >=1;
+					}
+					else {
+						return false;
+					}
 				}
 			}
 		]
