@@ -1,6 +1,26 @@
 angular.module('SpaceClickyGameApp')
 .factory('GameObjects', function () {
 	return {
+		/* oliverdoaner -- begin experimental */
+		rocks: {
+			basicRock: {
+				'id': 'basicRock',
+				'imgpath':'images/Shittyrock2.png'
+		    }
+		},
+		drones: {
+			autoDrill: {
+				'id':'autoDrill',
+				'name':'Auto Drill',
+				'description':'It drills automatically',
+				'moneyPerTick': 1,
+				'costincrease': 1.15,
+				'maximum': 50,
+				'cost':30,
+				'imgpath': 'images/drone.png'
+			},
+		},
+		/* oliverdoaner -- end experimental */
 		tiers: [
 				{
 					'id': 0,

@@ -11,11 +11,14 @@
 		<script src="js/SpaceClickyGame.Player.js"></script>
 		<script src="js/SpaceClickyGame.GameObjects.js"></script>
 		<script src="js/SpaceClickyGame.Shop.js"></script>
+<<<<<<< HEAD
 		<script src="js/SpaceClickyGame.Notifications.js"></script>
 		<script src="js/SpaceClickyGame.Achievements.js"></script>
+=======
 		<script src="js/SpaceClickyGame.GameEntity.js"></script>
 		<script src="js/SpaceClickyGame.Drawable.js"></script>
 		<script src="js/SpaceClickyGame.Orbiter.js"></script>
+>>>>>>> oliverdoaner/rotate-rock
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/notifications.css" rel="stylesheet">
 		<link href="css/items.css" rel="stylesheet">
