@@ -1,10 +1,11 @@
 angular.module('SpaceClickyGameApp', ['ngAnimate'])
-.controller('SpaceController', ['$scope', '$timeout', 'Player', 'Shop', 'NotificationCenter',
-		function ($scope, $timeout, Player, Shop, NotificationCenter) {
+.controller('SpaceController', ['$scope', '$timeout', 'Player', 'Shop', 'NotificationCenter', 'UI',
+		function ($scope, $timeout, Player, Shop, NotificationCenter, UI) {
 	
 	$scope.player = Player;
 	$scope.shop = Shop;
 	$scope.notificationCenter = NotificationCenter;
+	$scope.ui = UI;
 	
 	$scope.timerLoop = function () {
 		$scope.player.money += $scope.player.moneyPerTick;

@@ -11,6 +11,7 @@
 		<script src="js/SpaceClickyGame.Player.js"></script>
 		<script src="js/SpaceClickyGame.GameObjects.js"></script>
 		<script src="js/SpaceClickyGame.Shop.js"></script>
+		<script src="js/SpaceClickyGame.UI.js"></script>
 		<script src="js/SpaceClickyGame.Notifications.js"></script>
 		<script src="js/SpaceClickyGame.Achievements.js"></script>
 		<script src="js/SpaceClickyGame.GameEntity.js"></script>
@@ -20,65 +21,64 @@
 		<link href="css/notifications.css" rel="stylesheet">
 		<link href="css/items.css" rel="stylesheet">
 		<link href="css/animate.css" rel="stylesheet">
+		<link href="css/menu.css" rel="stylesheet">
 	</head>
 	<body  ng-controller="SpaceController">
-	<div class="navbar navbar-inverse navbar-fixed-top::before" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nvarbar-collapse">
-				</button>
-				<a class="navbar-brand" href="#">Space Clicky Game</a>
+	<div class="wrapper">	
+		<div class="sidebar sidebar-right">
+			<div class="sidebar-nav">
+				<!-- TODO: Replace with icons -->
+				<!-- TODO: Make menu slide open for narrower screens -->
+				<ul>
+					<li ng-click="ui.sidebar.changeToPanel('stats')">P</li>
+					<li ng-click="ui.sidebar.changeToPanel('shop')">S</li>
+					<li ng-click="ui.sidebar.changeToPanel('achievements')">A</li>
+				<ul>
+					
 			</div>
-			<div class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li><a href="#">Home</a></li>
-				</ul>
+		
+			<div class="sidebar-content">
+			
+				<!-- Maybe move current money out of here so you can see how much money you have while buying -->
+				<div class="sidebar-panel sidebar-panel-stats" ng-show="ui.sidebar.activePanel==='stats'">
+					<p>Clicks: {{player.clicks}}</p>
+					<p>Money per click: {{player.multiplier | number:0}}</p>
+					<p>Money per tick: {{player.moneyPerTick | number:0}}</p>
+					<p>Money: {{player.money |number:0 }}</p>
+					<p>Upgrades:</p>
+					<ul>
+						<li ng-repeat="ownedPurchaseType in player.purchasedUpgrades" ng-if="ownedPurchaseType.amountOwned > 0">{{ownedPurchaseType.purchase.name}} ({{ownedPurchaseType.amountOwned}})</li>
+					</ul>
+				</div>
+			
+				<div class="sidebar-panel sidebar-panel-shop" ng-show="ui.sidebar.activePanel==='shop'">
+
+					<div id="purchaseWindow" >
+						<purchase ng-repeat="purchaseOption in shop.purchaseOptions" purchase-option="purchaseOption" on-purchase="shop.purchaseUpgrade(purchaseOption)"></purchase>
+					</div>
+				</div>
+			
+				<div class="sidebar-panel sidebar-panel-achievements" ng-show="ui.sidebar.activePanel==='achievements'">
+					<div ng-controller="AchievementsController">
+						<p>Achievements:</p>
+						<achievement ng-repeat="achievement in achievements.completed" achievement="achievement"></achievement>
+					</div>
+				</div>
 			</div>
 		</div>
-		
+
 		<notification-center>
 			<notification ng-repeat="notification in notificationCenter.activeNotifications"></notification>
 		</notification-center>
-	</div>
 
-	<div class="container">
-		<div space-clicky-stage id="mainStage" class="col-md-6">
-		
-		</div>
+		<div class="main-window">
+			<div class="row">
+				<div space-clicky-stage id="mainStage" class="col-md-12">
+				
+				</div>
 
-		<div class="col-md-6">
-			<p>Clicks: {{player.clicks}}</p>
-			<p>Money per click: {{player.multiplier | number:0}}</p>
-			<p>Money per tick: {{player.moneyPerTick | number:0}}</p>
-			<p>Money: {{player.money |number:0 }}</p>
-			<p>Upgrades:</p>
-			<ul>
-				<li ng-repeat="ownedPurchaseType in player.purchasedUpgrades" ng-if="ownedPurchaseType.amountOwned > 0">{{ownedPurchaseType.purchase.name}} ({{ownedPurchaseType.amountOwned}})</li>
-			</ul>
-			
-			
-			<p><button id="purchase" ng-click="shop.togglePurchasesMenu()">{{purchasesToggleTitle}}</button></p>
-			
-			<div id="purchaseWindow" ng-if="shop.purchaseMenuOpen" class="row">
-				<purchase ng-repeat="purchaseOption in shop.purchaseOptions" purchase-option="purchaseOption" on-purchase="shop.purchaseUpgrade(purchaseOption)" class="col-md-6"></purchase>
-			</div>	
-		</div>
-
-	</div>
-	<div class="container" ng-controller="AchievementsController">
-		<p>Achievements:</p>
-		<achievement ng-repeat="achievement in achievements.completed" achievement="achievement"></achievement>
-	</div>
-	<!--
-	Canvas without KineticJS
-	<div class="container">
-		<canvas id="mainDisplay" width="500" height="1000" style="border:1px solid #000000;"></canvas>
-		
-		<div ng-controller="SpaceController">
-			<button ng-click="clickButton()">Click</button>
-			<p>Clicks: {{clicks}}</p>
+			</div>
 		</div>
 	</div>
-	-->
 	</body>
 </html>
