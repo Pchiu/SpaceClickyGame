@@ -15,6 +15,10 @@ angular.module('SpaceClickyGameApp')
 				return true;
 			}
 			return false;
+		},
+
+		checkAmountOwned: function(name, minAmount) {
+			return this.purchasedUpgrades[name] == null ? false : this.purchasedUpgrades[name].amountOwned >= minAmount;
 		}
 	}
 });
