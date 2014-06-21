@@ -62,25 +62,25 @@ angular.module('SpaceClickyGameApp', [])
 										'imageName': 'drone'
 									};
 						var drillSprite = {
-										'anchorPoints': [{'x': 9, 'y': 19}],
+										'anchorPoints': [{'x': 8.5, 'y': 19}],
 										'imageName': 'drill'
 									};
 						var spriteGroup = this.createSpriteGroup(droneSprite, this.mainStage.width()/2, this.mainStage.height()/2);
-						this.addChildToSpriteGroup(spriteGroup, "root", drillSprite, 0, 0, "maindrill")
-
+						// this.addChildToSpriteGroup(spriteGroup, "root", drillSprite, 1, 0, "sidedrill", -90)
+						this.addChildToSpriteGroup(spriteGroup, "root", droneSprite, 1, 2, "sidedrill1", 0)
+						this.addChildToSpriteGroup(spriteGroup, "sidedrill1", drillSprite, 1, 0, "drill", -90)
+						//this.addChildToSpriteGroup(spriteGroup, "root", drillSprite, 1, 0, "sidedrill2", -90)
 						//Daisy chaining parenting example.
-						//this.addChildToSpriteGroup(spriteGroup, "root", droneSprite, 1, 2, "leftdrone")
-						//this.addChildToSpriteGroup(spriteGroup, "leftdrone", drillSprite, 0, 0, "leftdrill")
-						//this.addChildToSpriteGroup(spriteGroup, "leftdrone", droneSprite, 1, 2, "lefterdrone")
-						//this.addChildToSpriteGroup(spriteGroup, "lefterdrone", drillSprite, 0, 0, "lefterdrill")
+
 
 						var drill = { 'spriteGroup': spriteGroup,
 									  'period': this.getRandomInt(4000, 10000)
 						}
 						this.objects.autoDrills.push(drill);
-						drill.spriteGroup.imageGroup.offsetX(this.getRandomInt(200, 250));
+						drill.spriteGroup.imageGroup.offsetX(this.getRandomInt(1, 1));
 					}
 					this.mainLayer.add(drill.spriteGroup.imageGroup);
+
 					if(this.autoDrillsAnimation == null) {
 						this.createAutoDrillsAnimation();
 					} 
@@ -90,36 +90,30 @@ angular.module('SpaceClickyGameApp', [])
 					return Math.floor(Math.random() * (max - min + 1)) + min;
 				},
 
-				addChildToSpriteGroup: function(spriteGroup, parentNodeName, child, parentAnchorIndex, childAnchorIndex, childNodeName) {
-					var targetNode = this.findNode(spriteGroup.root, parentNodeName);
-					if (targetNode == null)
+				addChildToSpriteGroup: function(spriteGroup, parentNodeName, child, parentAnchorIndex, childAnchorIndex, childNodeName, angle) {
+					var parentNode = this.findNode(spriteGroup.root, parentNodeName);
+					if (parentNode == null)
 					{
 						console.log("Failed to find a node with the name '" + parentNodeName + "'.")
 						return;
 					}
-					if (targetNode.id == childNodeName)
+					if (parentNode.id == childNodeName)
 					{
 						console.log("A node with the name '" + childNodeName + "' already exists!")
 						return;
 					}
-					var previousXOffset = 0;
-					var previousYOffset = 0;
-					var thisXOffset = targetNode.anchorPoints[parentAnchorIndex].x - child.anchorPoints[childAnchorIndex].x 
-					var thisYOffset = targetNode.anchorPoints[parentAnchorIndex].y - child.anchorPoints[childAnchorIndex].y
-					var node = targetNode;
-					while (node.parent != null)
-					{
-						previousXOffset += node.xOffset;
-						previousYOffset += node.yOffset;
+					
+					var previousXOffset = parentNode.xOffset;
+					var previousYOffset = parentNode.yOffset;
 
-						node = node.parent;
-					}
 					var childSprite = new Kinetic.Image({
-						x: thisXOffset + previousXOffset,
-						y: thisYOffset +  previousYOffset,
+						x: previousXOffset + parentNode.anchorPoints[parentAnchorIndex].x,
+						y: previousYOffset + parentNode.anchorPoints[parentAnchorIndex].y,
+						offset: {x: child.anchorPoints[childAnchorIndex].x, y: child.anchorPoints[childAnchorIndex].y},
+						rotation: angle,
 						image: this.images[child.imageName + ".png"]
-					})
-					targetNode.children.push({'parent': targetNode, 'id': childNodeName, 'xOffset': thisXOffset, 'yOffset': thisYOffset, 'children': [], 'anchorPoints': child.anchorPoints})
+					});
+					parentNode.children.push({'parent': parentNode, 'id': childNodeName, 'xOffset': childSprite.x() - childSprite.offsetX(), 'yOffset': childSprite.y() - childSprite.offsetY(), 'children': [], 'anchorPoints': child.anchorPoints})
 					spriteGroup.imageGroup.add(childSprite);
 				},
 
@@ -163,7 +157,7 @@ angular.module('SpaceClickyGameApp', [])
 						for(var i = 0; i < autoDrills.length; i++) {
 							var autoDrill = autoDrills[i];
 							var angleDiff = frame.timeDiff * ((360/(autoDrill.period/1000))/ 1000);
-							autoDrill.spriteGroup.imageGroup.rotate(angleDiff)						
+							//autoDrill.spriteGroup.imageGroup.rotate(angleDiff)						
 						}
 					}, layer);
 					 
