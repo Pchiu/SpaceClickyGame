@@ -77,7 +77,7 @@ angular.module('SpaceClickyGameApp', [])
 									  'period': this.getRandomInt(4000, 10000)
 						}
 						this.objects.autoDrills.push(drill);
-						drill.spriteGroup.imageGroup.offsetX(this.getRandomInt(1, 1));
+						drill.spriteGroup.imageGroup.offsetX(this.getRandomInt(200, 250));
 					}
 					this.mainLayer.add(drill.spriteGroup.imageGroup);
 
@@ -102,13 +102,10 @@ angular.module('SpaceClickyGameApp', [])
 						console.log("A node with the name '" + childNodeName + "' already exists!")
 						return;
 					}
-					
-					var previousXOffset = parentNode.xOffset;
-					var previousYOffset = parentNode.yOffset;
 
 					var childSprite = new Kinetic.Image({
-						x: previousXOffset + parentNode.anchorPoints[parentAnchorIndex].x,
-						y: previousYOffset + parentNode.anchorPoints[parentAnchorIndex].y,
+						x: parentNode.xOffset + parentNode.anchorPoints[parentAnchorIndex].x,
+						y: parentNode.yOffset + parentNode.anchorPoints[parentAnchorIndex].y,
 						offset: {x: child.anchorPoints[childAnchorIndex].x, y: child.anchorPoints[childAnchorIndex].y},
 						rotation: angle,
 						image: this.images[child.imageName + ".png"]
@@ -157,7 +154,7 @@ angular.module('SpaceClickyGameApp', [])
 						for(var i = 0; i < autoDrills.length; i++) {
 							var autoDrill = autoDrills[i];
 							var angleDiff = frame.timeDiff * ((360/(autoDrill.period/1000))/ 1000);
-							//autoDrill.spriteGroup.imageGroup.rotate(angleDiff)						
+							autoDrill.spriteGroup.imageGroup.rotate(angleDiff)						
 						}
 					}, layer);
 					 
