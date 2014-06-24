@@ -1,5 +1,35 @@
 angular.module('SpaceClickyGameApp')
 .factory('GameObjects', function () {
+	var sprites = {
+		rocks: {
+			basicRock: {
+				'id': 'basicRock',
+				'imgpath': 'images/rock.png',
+				'anchorPoints': {}
+			}
+		},
+		drones: {
+			miningDrone: {
+				'id': 'miningDrone',
+				'imgpath': 'images/miningdrone.png',
+				'anchorPoints': {
+					drill: {'x': 0, 'y': 18},
+					left: {'x':0, 'y': 22},
+					right: {'x':36, 'y': 22},
+				}
+			},
+		},
+		drills: {
+			basicDrill: {
+				'id': 'basicDrill',
+				'imgpath': 'images/basicDrill.png',
+				'anchorPoints': {
+					base: {'x': 8, 'y': 18}
+				}
+			},
+		},
+	}
+
 	return {
 		/* oliverdoaner -- begin experimental */
 		rocks: {
@@ -9,18 +39,37 @@ angular.module('SpaceClickyGameApp')
 		    }
 		},
 		drones: {
-			autoDrill: {
-				'id':'autoDrill',
-				'name':'Auto Drill',
-				'description':'It drills automatically',
-				'moneyPerTick': 1,
-				'costincrease': 1.15,
-				'maximum': 50,
-				'cost':30,
-				'imgpath': 'images/drone.png'
+			miningDrone: {
+				'id':'miningDrone',
+				'imgpath': 'images/miningdrone.png'
 			},
 		},
 		/* oliverdoaner -- end experimental */
+		/* pchiu */
+
+		spriteGroups: {
+			rocks: {
+				basicRock: {
+					'id': 'basicrock',
+					components: [{sprite: sprites.rocks.basicRock, name: 'basicRock'}]
+				}
+			},
+			drones: {
+				miningDrone: {
+					'id': 'miningDrone',
+					components: [{sprite: sprites.drones.miningDrone, name: 'droneBody'},
+								 {sprite: sprites.drills.basicDrill, 
+								 	parentNode: 'droneBody',
+								 	name: 'drill',
+								 	parentAnchorPoint: sprites.drones.miningDrone.anchorPoints.drill, 
+								 	childAnchorPoint: sprites.drills.basicDrill.anchorPoints.base, 
+								 	angle: 0}
+					]
+				}
+			}
+		},
+
+		/* pchiu */
 		tiers: [
 				{
 					'id': 0,
@@ -46,8 +95,8 @@ angular.module('SpaceClickyGameApp')
 							'imgpath':'images/biggerdrill.png'
 						},
 						{
-							'id':'autoDrill',
-							'name':'Auto Drill',
+							'id':'miningDrone',
+							'name':'Mining Drone',
 							'description':'It drills automatically',
 							'moneyPerTick': 1,
 							'costincrease': 1.15,

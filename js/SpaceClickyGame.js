@@ -22,8 +22,8 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
         $scope.purchasesToggleTitle = open ? 'Close purchases menu' : 'Open purchases menu';
     }, true);
 
-	$scope.$watch("player.purchasedUpgrades['autoDrill']", function(autoDrills) {
-		if(autoDrills) {
+	$scope.$watch("player.purchasedUpgrades['miningDrone']", function(miningDrones) {
+		if(miningDrones) {
 			$scope.kineticCanvas.addDrone();
 		}
 	}, true);
@@ -46,8 +46,9 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 				},
 
 				addDrone: function() {
-					this.addDrawable(new Drone(GameObjects.drones.autoDrill, this.mainLayer, {x:250, y:250},
+					this.addDrawable(new Drone(GameObjects.spriteGroups.drones.miningDrone, this.mainLayer, {x:250, y:250},
 										 this.getRandomInt(200,250), this.getRandomInt(7000,25000)));
+					
 				},
 
 				getRandomInt: function(min, max) {
@@ -56,13 +57,13 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 
 				setStage: function() {
 					/* Setting up the first asteroid */
-					var moneyAstroid = new Asteroid(GameObjects.rocks.basicRock, this.mainLayer, {x:250, y:250}, -80000);
-					moneyAstroid.onClick = function() {
+					var moneyAsteroid = new Asteroid(GameObjects.spriteGroups.rocks.basicRock, this.mainLayer, {x:250, y:250}, -80000);
+					moneyAsteroid.onClick = function() {
 						scope.player.clicks += 1;
 						scope.player.money += 1.00 * scope.player.multiplier;
 						scope.$apply();
 					};
-					this.addDrawable(moneyAstroid);
+					this.addDrawable(moneyAsteroid);
 				},
 
 				init: function() {

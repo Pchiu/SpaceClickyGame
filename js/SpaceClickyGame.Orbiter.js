@@ -8,13 +8,12 @@ angular.extend(Orbiter.prototype, Drawable.prototype);
 
 Orbiter.prototype.onLoadedImage = function() {
 	Drawable.prototype.onLoadedImage.call(this); //TODO: remove?
-	this.kImage.offset({x: this.gameObject.cachedImage.width/2 + this.orbitDistance, y: this.gameObject.cachedImage.height/2});
+	this.spriteGroup.imageGroup.offset({x: this.gameObject.cachedImage.width/2 + this.orbitDistance, y: this.gameObject.cachedImage.height/2});
 };
 
 Orbiter.prototype.animate = function(frame) {
-	this.kImage.rotate(frame.timeDiff * ((360/(this.orbitPeriod/1000))/1000));
+	this.spriteGroup.imageGroup.rotate(frame.timeDiff * ((360/(this.orbitPeriod/1000))/1000));
 };
-
 
 var Asteroid = function(gameObject, kineticLayer, orbitCenter, orbitSpeed) {
 	Orbiter.call(this, gameObject, kineticLayer, orbitCenter, 0, orbitSpeed);
