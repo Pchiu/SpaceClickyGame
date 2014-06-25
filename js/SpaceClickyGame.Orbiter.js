@@ -8,7 +8,7 @@ angular.extend(Orbiter.prototype, Drawable.prototype);
 
 Orbiter.prototype.onLoadedImage = function() {
 	Drawable.prototype.onLoadedImage.call(this); //TODO: remove?
-	this.spriteGroup.imageGroup.offset({x: this.gameObject.cachedImage.width/2 + this.orbitDistance, y: this.gameObject.cachedImage.height/2});
+	this.spriteGroup.imageGroup.offset({x: this.spriteGroup.cachedImages[0].width/2 + this.orbitDistance, y: this.spriteGroup.cachedImages[0].height/2});
 };
 
 Orbiter.prototype.animate = function(frame) {
