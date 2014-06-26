@@ -7,13 +7,14 @@ var Drawable = function(gameObject, kineticLayer, position) {
 	{
 		loaders.push(this.loadSprite(gameObject, gameObject.components[i].sprite.id, gameObject.components[i].sprite.imgpath, i))
 	}
+	var self = this;
 	$.when.apply(null, loaders).done(function() {
-		var spriteGroup = this.createSpriteGroup(gameObject, gameObject.components[0], position.x, position.y)
+		var spriteGroup = self.createSpriteGroup(gameObject, gameObject.components[0], position.x, position.y)
 		for (var i = 1; i < gameObject.components.length; i++)
 		{
-			this.addChildToSpriteGroup(spriteGroup, gameObject.components[i]);
+			self.addChildToSpriteGroup(spriteGroup, gameObject.components[i]);
 		}
-		this.finalizeGroupToImage(spriteGroup);
+		self.finalizeGroupToImage(spriteGroup);
 	});
 };
 angular.extend(Drawable.prototype, GameEntity.prototype);
@@ -73,7 +74,6 @@ Drawable.prototype.createSpriteGroup = function(gameObject, parent, x, y) {
 
 	var spriteGroup = {
 		'imageGroup': kGroup,
-		'cachedImages': {}
 	};
 
 	var kImage = new Kinetic.Image({
