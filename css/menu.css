@@ -1,5 +1,9 @@
 
 .wrapper {
+	padding-right: 50px;
+}
+
+.wrapper.active {
 	padding-right: 300px;
 }
 
@@ -55,13 +59,15 @@
 
 .sidebar-right {
 	margin-right: -300px;
-	right: 300px;
+	right:50px;
 }
 
-
-@media all and (max-width: 829px) {
+@media screen and (max-width: 829px) {
 	.sidebar-right{
 		margin-right:-550px;
+		-webkit-transition: all 0.25s ease-out;
+    	-moz-transition: all 0.25s ease-out;
+    	transition: all 0.25s ease-out;
 	}
 }
 

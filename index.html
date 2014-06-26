@@ -24,19 +24,18 @@
 		<link href="css/menu.css" rel="stylesheet">
 	</head>
 	<body  ng-controller="SpaceController">
-	<div class="wrapper">	
-		<div class="sidebar sidebar-right">
+	<div class="wrapper">
+		<div class="sidebar sidebar-right" id="sidebar">
 			<div class="sidebar-nav">
 				<!-- TODO: Replace with icons -->
 				<!-- TODO: Make menu slide open for narrower screens -->
 				<ul>
+					<li><button type="button" class="btn btn-primary sidebar-button" data-toggle="toggleSidebar"><i class="glyphicon glyphicon-chevron-left"></i></button></li>
 					<li ng-click="ui.sidebar.changeToPanel('stats')">P</li>
 					<li ng-click="ui.sidebar.changeToPanel('shop')">S</li>
 					<li ng-click="ui.sidebar.changeToPanel('achievements')">A</li>
-				<ul>
-					
+				</ul>
 			</div>
-		
 			<div class="sidebar-content">
 			
 				<!-- Maybe move current money out of here so you can see how much money you have while buying -->
@@ -52,7 +51,6 @@
 				</div>
 			
 				<div class="sidebar-panel sidebar-panel-shop" ng-show="ui.sidebar.activePanel==='shop'">
-
 					<div id="purchaseWindow" >
 						<purchase ng-repeat="purchaseOption in shop.purchaseOptions" purchase-option="purchaseOption" on-purchase="shop.purchaseUpgrade(purchaseOption)"></purchase>
 					</div>
@@ -70,13 +68,10 @@
 		<notification-center>
 			<notification ng-repeat="notification in notificationCenter.activeNotifications"></notification>
 		</notification-center>
-
 		<div class="main-window">
 			<div class="row">
 				<div space-clicky-stage id="mainStage" class="col-md-12">
-				
 				</div>
-
 			</div>
 		</div>
 	</div>
