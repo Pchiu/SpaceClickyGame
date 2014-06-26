@@ -102,7 +102,7 @@ angular.module('SpaceClickyGameApp')
 							'costincrease': 1.15,
 							'maximum': 50,
 							'cost':30,
-							'imgpath': 'images/drone.png'
+							'imgpath': 'images/miningdrone.png'
 						}
 					]
 				},

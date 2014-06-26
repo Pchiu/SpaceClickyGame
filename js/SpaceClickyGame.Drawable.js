@@ -1,17 +1,15 @@
 var Drawable = function(gameObject, kineticLayer, position) {
 	this.kLayer = kineticLayer;
 	GameEntity.call(this, gameObject, position);
+	var spriteGroup = this.createSpriteGroup(gameObject.components[0], position.x, position.y)
 
-	if (!this.spriteGroup) {
-		this.spriteGroup = this.createSpriteGroup(gameObject.components[0], position.x, position.y)
-	}
 
 	for (var i = 1; i < gameObject.components.length; i++)
 	{
-		this.addChildToSpriteGroup(spriteGroup, components[i]);
+		this.addChildToSpriteGroup(spriteGroup, gameObject.components[i]);
 	}
 
-	this.finalizeGroup(this.kLayer, this.spriteGroup);
+	this.finalizeGroup(this.kLayer, spriteGroup);
 
 	//this.kLayer.add(this.spriteGroup.imageGroup);
 	/*
@@ -118,7 +116,7 @@ Drawable.prototype.addChildToSpriteGroup = function(spriteGroup, component){
 		console.log("Failed to find a node with the name '" + component.parentNode + "'.");
 		return;
 	}
-	if (parentNode.id == childNodeName)
+	if (parentNode.id == component.name)
 	{
 		console.log("A node with the name'" + component.name + "' already exists!");
 		return;
@@ -131,6 +129,7 @@ Drawable.prototype.addChildToSpriteGroup = function(spriteGroup, component){
 		rotation: component.angle,
 	})
 	childSprite.image.src = component.sprite.imgpath;
+	spriteGroup.imageGroup.add(childSprite);
 	parentNode.children.push({'parent': parentNode, 'id': component.name, 'xOffset': childSprite.x() - childSprite.offsetX(), 'yOffset': childSprite.y() - childSprite.offsetY(), 'children': []})
 }
 
