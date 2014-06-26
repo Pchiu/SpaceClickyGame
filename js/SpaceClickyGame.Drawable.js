@@ -1,15 +1,8 @@
 var Drawable = function(gameObject, kineticLayer, position) {
 	this.kLayer = kineticLayer;
 	GameEntity.call(this, gameObject, position);
-	var spriteGroup = this.createSpriteGroup(gameObject.components[0], position.x, position.y)
 
-
-	for (var i = 1; i < gameObject.components.length; i++)
-	{
-		this.addChildToSpriteGroup(spriteGroup, gameObject.components[i]);
-	}
-
-	this.finalizeGroup(this.kLayer, spriteGroup);
+	this.cacheGroupImage(gameObject, position);
 
 	//this.kLayer.add(this.spriteGroup.imageGroup);
 	/*
@@ -25,23 +18,30 @@ var Drawable = function(gameObject, kineticLayer, position) {
 };
 angular.extend(Drawable.prototype, GameEntity.prototype);
 
-/*
-Drawable.prototype.cacheImage = function(gameObject) { 
+
+Drawable.prototype.cacheGroupImage = function(gameObject, position) { 
 	if (!gameObject.cachedImage) {
-		gameObject.cachedImage = new Image();
-		gameObject.cachedImage.onload = this.onLoadedImage.bind(this);
-		gameObject.cachedImage.src = gameObject.imgpath;
+		var spriteGroup = this.createSpriteGroup(gameObject.components[0], position.x, position.y)
+		for (var i = 1; i < gameObject.components.length; i++)
+		{
+			this.addChildToSpriteGroup(spriteGroup, gameObject.components[i]);
+		}
+		this.finalizeGroupToImage(spriteGroup);
+
+		//gameObject.cachedImage = new Image();
+		//gameObject.cachedImage.onload = this.onLoadedImage.bind(this);
+		//gameObject.cachedImage.src = gameObject.imgpath;
 	}
 	else { // Image was already Cached, carry on.
-		this.onLoadedImage.call(this);
+		//this.onLoadedImage.call(this);
 	}
 };
-*/
+
 
 Drawable.prototype.cacheImage = function(spriteGroup, image, imagePath) {
 	if (!spriteGroup.cachedImages[image]) {
 		spriteGroup.cachedImages[image] = new Image();
-		spriteGroup.cachedImages[image].onload = this.onLoadedImage.bind(this);
+		//spriteGroup.cachedImages[image].onload = this.onLoadedImage.bind(spriteGroup);
 		spriteGroup.cachedImages[image].src = imagePath
 	}
 };
@@ -50,8 +50,8 @@ Drawable.prototype.animate = function(frame) {
 	console.log("no animation present for " + this.id);
 };
 
-Drawable.prototype.finalizeGroup = function(layer, spriteGroup) {
-	/*
+Drawable.prototype.finalizeGroupToImage = function(spriteGroup) {
+	
 	spriteGroup.imageGroup.toImage({
 		callback: function(img) {
 			var image = new Kinetic.Image({
@@ -61,21 +61,22 @@ Drawable.prototype.finalizeGroup = function(layer, spriteGroup) {
 				offsetX: spriteGroup.cachedImages[0].width()/2,
 				offsetY: spriteGroup.cachedImages[0].height()/2,
 			})
+			this.gameObject.cachedImage = image;
 			image.cache();
 			image.drawHitFromCache();
 			image.on('click', this.onClick.bind)
-			layer.add(image);
 		}
 	})
-	*/
+	/*
 	spriteGroup.imageGroup.on('click', this.onClick.bind(this));
 	spriteGroup.imageGroup.cache();
 	spriteGroup.imageGroup.drawHitFromCache();
+	*/
 	
 };
 
 Drawable.prototype.onLoadedImage = function() {
-	//this.kImage.setImage(this.gameObject.cachedImage);
+	this.kImage.setImage(this.gameObject.cachedImage);
 	//this.kImage.on('click', this.onClick.bind(this));
 	//this.kImage.cache();
 	//this.kImage.drawHitFromCache();
@@ -96,14 +97,14 @@ Drawable.prototype.createSpriteGroup = function(parent, x, y) {
 		'cachedImages': {}
 	};
 
-	var kParentImage = new Kinetic.Image({
+	var kImage = new Kinetic.Image({
 	}) 
-	this.cacheImage(spriteGroup, parent.name, parent.sprite.imgpath)
+	this.cacheImage(spriteGroup, parent.sprite.id, parent.sprite.imgpath)
 
-	kParentImage.src = spriteGroup.cachedImages[parent.name];
-	spriteGroup.imageGroup.offsetX(kParentImage.width()/2);
-	spriteGroup.imageGroup.offsetY(kParentImage.height()/2);
-	spriteGroup.imageGroup.add(kParentImage);
+	kImage.src = spriteGroup.cachedImages[parent.sprite.id];
+	spriteGroup.imageGroup.offsetX(kImage.width()/2);
+	spriteGroup.imageGroup.offsetY(kImage.height()/2);
+	spriteGroup.imageGroup.add(kImage);
 	
 	spriteGroup["root"] = {'parent': null, 'id': parent.name, 'xOffset': 0, 'yOffset': 0, 'children': []};
 	return spriteGroup
@@ -122,15 +123,16 @@ Drawable.prototype.addChildToSpriteGroup = function(spriteGroup, component){
 		return;
 	}
 
-	var childSprite = new Kinetic.Image({
+	var kImage = new Kinetic.Image({
 		x: parentNode.xOffset + component.parentAnchorPoint.x,
 		y: parentNode.yOsset + component.parentAnchorPoint.y,
 		offset: {x: component.childAnchorPoint.x, y: component.childAnchorPoint.y},
 		rotation: component.angle,
 	})
-	childSprite.image.src = component.sprite.imgpath;
-	spriteGroup.imageGroup.add(childSprite);
-	parentNode.children.push({'parent': parentNode, 'id': component.name, 'xOffset': childSprite.x() - childSprite.offsetX(), 'yOffset': childSprite.y() - childSprite.offsetY(), 'children': []})
+	this.cacheImage(spriteGroup, component.sprite.id, component.sprite.imgpath)
+	kImage.image.src = spriteGroup.cachedImages[component.sprite.id];
+	spriteGroup.imageGroup.add(kImage);
+	parentNode.children.push({'parent': parentNode, 'id': component.name, 'xOffset': kImage.x() - kImage.offsetX(), 'yOffset': kImage.y() - kImage.offsetY(), 'children': []})
 }
 
 Drawable.prototype.findNode = function(node, nodeName) {
