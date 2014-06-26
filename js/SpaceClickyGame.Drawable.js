@@ -1,9 +1,6 @@
 var Drawable = function(gameObject, kineticLayer, position) {
 	this.kLayer = kineticLayer;
-	GameEntity.call(this, gameObject, position);
-
-	$injector = angular.injector(['ng']);
-	q = $injector.get('$q');
+	GameEntity.call(this, gameObject, position)
 
 	var loaders = [];
 	for (var i = 0; i < gameObject.components.length; i++)
@@ -21,18 +18,6 @@ var Drawable = function(gameObject, kineticLayer, position) {
 };
 angular.extend(Drawable.prototype, GameEntity.prototype);
 
-Drawable.prototype.cacheGroupImage = function(gameObject, position) { 
-	if (!gameObject.cachedImage) {
-	
-		//gameObject.cachedImage = new Image();
-		//gameObject.cachedImage.onload = this.onLoadedImage.bind(this);
-		//gameObject.cachedImage.src = gameObject.imgpath;
-	}
-	else { // Image was already Cached, carry on.
-		//this.onLoadedImage.call(this);
-	}
-};
-
 Drawable.prototype.loadSprite = function(gameObject, id, imagepath, index)
 {
 	var deferred = $.Deferred();
@@ -45,21 +30,6 @@ Drawable.prototype.loadSprite = function(gameObject, id, imagepath, index)
 		sprite.src = imagepath;
 	}
 	return deferred.promise();
-};
-
-Drawable.prototype.cacheImage = function(gameObject, image, imagePath) {
-	if (!gameObject.cachedImages[image]) {
-		gameObject.cachedImages[image] = new Image();
-		gameObject.cachedImages[image].onload = this.onLoadedImage.bind(this);
-		gameObject.cachedImages[image].src = imagePath
-	}
-};
-
-Drawable.prototype.onLoadedImage = function() {
-	//this.kImage.setImage(this.gameObject.cachedImage);
-	//this.kImage.on('click', this.onClick.bind(this));
-	//this.kImage.cache();
-	//this.kImage.drawHitFromCache();
 };
 
 Drawable.prototype.animate = function(frame) {
