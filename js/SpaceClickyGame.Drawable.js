@@ -2,32 +2,28 @@ var Drawable = function(gameObject, kineticLayer, position) {
 	this.kLayer = kineticLayer;
 	GameEntity.call(this, gameObject, position);
 
-	this.cacheGroupImage(gameObject, position);
+	$injector = angular.injector(['ng']);
+	q = $injector.get('$q');
 
-	//this.kLayer.add(this.spriteGroup.imageGroup);
-	/*
-	if (!this.kImage) {
-		this.kImage = new Kinetic.Image({
-			x: position.x,
-			y: position.y,
-		});
-		this.kLayer.add(this.kImage);
+	var loaders = [];
+	for (var i = 0; i < gameObject.components.length; i++)
+	{
+		loaders.push(this.loadSprite(gameObject, gameObject.components[i].sprite.id, gameObject.components[i].sprite.imgpath, i))
 	}
-	this.cacheImage(gameObject);
-	*/
-};
-angular.extend(Drawable.prototype, GameEntity.prototype);
-
-
-Drawable.prototype.cacheGroupImage = function(gameObject, position) { 
-	if (!gameObject.cachedImage) {
-		var spriteGroup = this.createSpriteGroup(gameObject.components[0], position.x, position.y)
+	$.when.apply(null, loaders).done(function() {
+		var spriteGroup = this.createSpriteGroup(gameObject, gameObject.components[0], position.x, position.y)
 		for (var i = 1; i < gameObject.components.length; i++)
 		{
 			this.addChildToSpriteGroup(spriteGroup, gameObject.components[i]);
 		}
 		this.finalizeGroupToImage(spriteGroup);
+	});
+};
+angular.extend(Drawable.prototype, GameEntity.prototype);
 
+Drawable.prototype.cacheGroupImage = function(gameObject, position) { 
+	if (!gameObject.cachedImage) {
+	
 		//gameObject.cachedImage = new Image();
 		//gameObject.cachedImage.onload = this.onLoadedImage.bind(this);
 		//gameObject.cachedImage.src = gameObject.imgpath;
@@ -37,13 +33,33 @@ Drawable.prototype.cacheGroupImage = function(gameObject, position) {
 	}
 };
 
-
-Drawable.prototype.cacheImage = function(spriteGroup, image, imagePath) {
-	if (!spriteGroup.cachedImages[image]) {
-		spriteGroup.cachedImages[image] = new Image();
-		//spriteGroup.cachedImages[image].onload = this.onLoadedImage.bind(spriteGroup);
-		spriteGroup.cachedImages[image].src = imagePath
+Drawable.prototype.loadSprite = function(gameObject, id, imagepath, index)
+{
+	var deferred = $.Deferred();
+	if (!this.gameObject.cachedImages[id]){
+		var sprite = new Image();
+		sprite.onload = function() {
+			gameObject.cachedImages[gameObject.components[index].sprite.id] = sprite;
+			deferred.resolve();
+		};
+		sprite.src = imagepath;
 	}
+	return deferred.promise();
+};
+
+Drawable.prototype.cacheImage = function(gameObject, image, imagePath) {
+	if (!gameObject.cachedImages[image]) {
+		gameObject.cachedImages[image] = new Image();
+		gameObject.cachedImages[image].onload = this.onLoadedImage.bind(this);
+		gameObject.cachedImages[image].src = imagePath
+	}
+};
+
+Drawable.prototype.onLoadedImage = function() {
+	//this.kImage.setImage(this.gameObject.cachedImage);
+	//this.kImage.on('click', this.onClick.bind(this));
+	//this.kImage.cache();
+	//this.kImage.drawHitFromCache();
 };
 
 Drawable.prototype.animate = function(frame) {
@@ -75,18 +91,11 @@ Drawable.prototype.finalizeGroupToImage = function(spriteGroup) {
 	
 };
 
-Drawable.prototype.onLoadedImage = function() {
-	this.kImage.setImage(this.gameObject.cachedImage);
-	//this.kImage.on('click', this.onClick.bind(this));
-	//this.kImage.cache();
-	//this.kImage.drawHitFromCache();
-};
-
 Drawable.prototype.onClick = function() {
 	console.log(this.id + " was CLICKED!");
 };
 
-Drawable.prototype.createSpriteGroup = function(parent, x, y) {
+Drawable.prototype.createSpriteGroup = function(gameObject, parent, x, y) {
 	var kGroup = new Kinetic.Group({
 		x: x,
 		y: y
@@ -99,9 +108,8 @@ Drawable.prototype.createSpriteGroup = function(parent, x, y) {
 
 	var kImage = new Kinetic.Image({
 	}) 
-	this.cacheImage(spriteGroup, parent.sprite.id, parent.sprite.imgpath)
 
-	kImage.src = spriteGroup.cachedImages[parent.sprite.id];
+	kImage.src = gameObject.cachedImages[parent.sprite.id];
 	spriteGroup.imageGroup.offsetX(kImage.width()/2);
 	spriteGroup.imageGroup.offsetY(kImage.height()/2);
 	spriteGroup.imageGroup.add(kImage);
@@ -110,7 +118,7 @@ Drawable.prototype.createSpriteGroup = function(parent, x, y) {
 	return spriteGroup
 };
 
-Drawable.prototype.addChildToSpriteGroup = function(spriteGroup, component){
+Drawable.prototype.addChildToSpriteGroup = function(gameObject, spriteGroup, component){
 	var parentNode = this.findNode(spriteGroup.root, component.parentNode)
 	if (parentNode == null)
 	{
@@ -129,8 +137,7 @@ Drawable.prototype.addChildToSpriteGroup = function(spriteGroup, component){
 		offset: {x: component.childAnchorPoint.x, y: component.childAnchorPoint.y},
 		rotation: component.angle,
 	})
-	this.cacheImage(spriteGroup, component.sprite.id, component.sprite.imgpath)
-	kImage.image.src = spriteGroup.cachedImages[component.sprite.id];
+	kImage.image.src = gameObject.cachedImages[component.sprite.id];
 	spriteGroup.imageGroup.add(kImage);
 	parentNode.children.push({'parent': parentNode, 'id': component.name, 'xOffset': kImage.x() - kImage.offsetX(), 'yOffset': kImage.y() - kImage.offsetY(), 'children': []})
 }

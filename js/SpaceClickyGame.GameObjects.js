@@ -51,20 +51,22 @@ angular.module('SpaceClickyGameApp')
 			rocks: {
 				basicRock: {
 					'id': 'basicrock',
-					components: [{sprite: sprites.rocks.basicRock, name: 'basicRock'}]
+					components: [{sprite: sprites.rocks.basicRock, name: 'basicRock'}],
+					cachedImages: {}
 				}
 			},
 			drones: {
 				miningDrone: {
-					'id': 'miningDrone',
-					components: [{sprite: sprites.drones.miningDrone, name: 'droneBody'},
-								 {sprite: sprites.drills.basicDrill, 
-								 	parentNode: 'droneBody',
-								 	name: 'drill',
-								 	parentAnchorPoint: sprites.drones.miningDrone.anchorPoints.drill, 
-								 	childAnchorPoint: sprites.drills.basicDrill.anchorPoints.base, 
-								 	angle: 0}
-					]
+						'id': 'miningDrone',
+						components: [{sprite: sprites.drones.miningDrone, name: 'droneBody'},
+									 {sprite: sprites.drills.basicDrill, 
+									 	parentNode: 'droneBody',
+									 	name: 'drill',
+									 	parentAnchorPoint: sprites.drones.miningDrone.anchorPoints.drill, 
+									 	childAnchorPoint: sprites.drills.basicDrill.anchorPoints.base, 
+									 	angle: 0}
+						],
+						cachedImages: {}
 				}
 			}
 		},
