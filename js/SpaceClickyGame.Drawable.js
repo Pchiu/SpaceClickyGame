@@ -2,11 +2,6 @@ var Drawable = function(gameObject, kineticLayer, position) {
 	this.kLayer = kineticLayer;
 	GameEntity.call(this, gameObject, position)
 
-	if (gameObject.cachedImage != null)
-	{
-		return;
-	}
-
 	var loaders = [];
 	for (var i = 0; i < gameObject.components.length; i++)
 	{

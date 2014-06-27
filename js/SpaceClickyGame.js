@@ -38,10 +38,11 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 				context: null,
 				mainStage: null,
 				mainLayer: null,
+
 				drawables: [],
 
-				addDrawable: function (drawable, self) {
-					self.drawables.push(drawable);
+				addDrawable: function (drawable) {
+					this.drawables.push(drawable);
 				},
 
 				addDrone: function() {
@@ -54,7 +55,7 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 					return Math.floor(Math.random() * (max - min + 1)) + min;
 				},
 
-				setStage: function(callback, self) {
+				setStage: function() {
 					/* Setting up the first asteroid */
 					var moneyAsteroid = new Asteroid(GameObjects.spriteGroups.rocks.basicRock, this.mainLayer, {x:250, y:250}, -80000);
 					moneyAsteroid.onClick = function() {
@@ -62,7 +63,7 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 						scope.player.money += 1.00 * scope.player.multiplier;
 						scope.$apply();
 					};
-					callback(moneyAsteroid, self);
+					this.addDrawable(moneyAsteroid);
 				},
 
 				init: function() {
@@ -71,10 +72,10 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 						width: 500, 
 						height: 500
 					});
-					var self = this;
+
 					this.mainLayer = new Kinetic.Layer();
 					this.mainStage.add(this.mainLayer);
-					this.setStage(this.addDrawable, self);
+					this.setStage();
 
 					var drawables = this.drawables;
 					this.mainAnimation = new Kinetic.Animation(function(frame) {
