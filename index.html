@@ -25,14 +25,14 @@
 	</head>
 	<body  ng-controller="SpaceController">
 	<div class="wrapper">
-		<div class="sidebar sidebar-right" id="sidebar">
+		<div class="sidebar sidebar-right">
 			<div class="sidebar-nav">
 				<!-- TODO: Replace with icons -->
 				<!-- TODO: Make menu slide open for narrower screens -->
 				<ul>
-					<li data-toggle="toggleSidebar" ng-click="ui.sidebar.changeToPanel('stats')">P</li>
-					<li data-toggle="toggleSidebar" ng-click="ui.sidebar.changeToPanel('shop')">S</li>
-					<li data-toggle="toggleSidebar" ng-click="ui.sidebar.changeToPanel('achievements')">A</li>
+					<li ng-click="ui.sidebar.changeToPanel('stats')">P</li>
+					<li ng-click="ui.sidebar.changeToPanel('shop')">S</li>
+					<li ng-click="ui.sidebar.changeToPanel('achievements')">A</li>
 				</ul>
 			</div>
 			<div class="sidebar-content">

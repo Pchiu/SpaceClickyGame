@@ -15,14 +15,14 @@ angular.module('SpaceClickyGameApp')
 					$('.wrapper').toggleClass('active');
 					if (this.sidebarActive)
 					{
-						$('#sidebar').animate({
+						$('.sidebar').animate({
 							right:50
 						})
 						this.sidebarActive = false
 					}
 					else
 					{
-						$('#sidebar').animate({
+						$('.sidebar').animate({
 							right:300
 						})
 						this.sidebarActive = true
@@ -33,7 +33,7 @@ angular.module('SpaceClickyGameApp')
 					if (!this.sidebarActive)
 					{
 						$('.wrapper').toggleClass('active');
-						$('#sidebar').animate({
+						$('.sidebar').animate({
 							right:300
 						})
 						this.sidebarActive = true
