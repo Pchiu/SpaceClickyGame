@@ -22,7 +22,7 @@ angular.module('SpaceClickyGameApp')
 		drills: {
 			basicDrill: {
 				'id': 'basicDrill',
-				'imgpath': 'images/basicDrill.png',
+				'imgpath': 'images/basicdrill.png',
 				'anchorPoints': {
 					base: {'x': 8, 'y': 18}
 				}

@@ -17,7 +17,7 @@ var Drawable = function(gameObject, kineticLayer, position) {
 		var spriteGroup = self.createSpriteGroup(gameObject, gameObject.components[0], position.x, position.y)
 		for (var i = 1; i < gameObject.components.length; i++)
 		{
-			self.addChildToSpriteGroup(spriteGroup, gameObject.components[i]);
+			self.addChildToSpriteGroup(gameObject, spriteGroup, gameObject.components[i]);
 		}
 		self.finalizeGroupToImage(spriteGroup);
 	});
