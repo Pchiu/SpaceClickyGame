@@ -1,7 +1,7 @@
 var Drawable = function(gameObject, kineticLayer, position) {
 	this.kLayer = kineticLayer;
 	GameEntity.call(this, gameObject, position)
-
+	
 	if (gameObject.cachedImage != null)
 	{
 		return;

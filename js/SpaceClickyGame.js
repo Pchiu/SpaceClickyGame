@@ -51,12 +51,21 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 					
 				},
 
+				addAsteroid: function(spriteGroup, position, rotationspeed) {
+					var self = this;
+					$.when(new Asteroid(spriteGroup, this.mainLayer, position, rotationspeed)).then( function(asteroid){
+						self.addDrawable(asteroid)
+						});
+				},
+
 				getRandomInt: function(min, max) {
 					return Math.floor(Math.random() * (max - min + 1)) + min;
 				},
 
 				setStage: function() {
 					/* Setting up the first asteroid */
+					this.addAsteroid(GameObjects.spriteGroups.rocks.basicRock, {x:250, y:250}, -80000);
+					/*
 					var moneyAsteroid = new Asteroid(GameObjects.spriteGroups.rocks.basicRock, this.mainLayer, {x:250, y:250}, -80000);
 					moneyAsteroid.onClick = function() {
 						scope.player.clicks += 1;
@@ -64,6 +73,7 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 						scope.$apply();
 					};
 					this.addDrawable(moneyAsteroid);
+					*/
 				},
 
 				init: function() {

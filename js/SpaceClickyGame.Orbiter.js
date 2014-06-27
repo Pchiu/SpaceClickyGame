@@ -24,7 +24,6 @@ Asteroid.prototype.onClick = function() {
 	console.log("PLEASE GIVE THE PLAYER MONEY!!!");
 };
 
-
 var Drone = function(gameObject, kineticLayer, orbitCenter, orbitDistance, orbitSpeed) {
 	Orbiter.call(this, gameObject, kineticLayer, orbitCenter, orbitDistance, orbitSpeed);
 };
