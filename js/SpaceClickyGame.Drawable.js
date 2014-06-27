@@ -6,7 +6,7 @@ var Drawable = function(gameObject, kineticLayer, position) {
 	{
 		return;
 	}
-	
+
 	var loaders = [];
 	for (var i = 0; i < gameObject.components.length; i++)
 	{
@@ -43,28 +43,25 @@ Drawable.prototype.animate = function(frame) {
 };
 
 Drawable.prototype.finalizeGroupToImage = function(spriteGroup) {
-	
+	this.kLayer.add(spriteGroup.imageGroup);
+	var self = this;
 	spriteGroup.imageGroup.toImage({
 		callback: function(img) {
+			console.log("Test")
 			var image = new Kinetic.Image({
 				image: img,
-				x: spriteGroup.imageGroup.x,
-				y: spriteGroup.imageGroup.y,
-				offsetX: spriteGroup.cachedImages[0].width()/2,
-				offsetY: spriteGroup.cachedImages[0].height()/2,
+				x: self.position.x,
+				y: self.position.y,
+				//offsetX: self.gameObject.cachedImages[self.gameObject.components[0].sprite.id].width()/2,
+				//offsetY: self.gameObject.cachedImages[self.gameObject.components[0].sprite.id].height()/2,
 			})
-			this.gameObject.cachedImage = image;
+			self.gameObject.cachedImage = image;
+			self.kLayer.add(image);
 			image.cache();
 			image.drawHitFromCache();
-			image.on('click', this.onClick.bind)
+			image.on('click', self.onClick.bind)
 		}
 	})
-	/*
-	spriteGroup.imageGroup.on('click', this.onClick.bind(this));
-	spriteGroup.imageGroup.cache();
-	spriteGroup.imageGroup.drawHitFromCache();
-	*/
-	
 };
 
 Drawable.prototype.onClick = function() {
@@ -74,7 +71,7 @@ Drawable.prototype.onClick = function() {
 Drawable.prototype.createSpriteGroup = function(gameObject, parent, x, y) {
 	var kGroup = new Kinetic.Group({
 		x: x,
-		y: y
+		y: y,
 	})
 
 	var spriteGroup = {
@@ -82,6 +79,8 @@ Drawable.prototype.createSpriteGroup = function(gameObject, parent, x, y) {
 	};
 
 	var kImage = new Kinetic.Image({
+		x: x,
+		y: y,
 	}) 
 
 	kImage.src = gameObject.cachedImages[parent.sprite.id];
@@ -128,4 +127,3 @@ Drawable.prototype.findNode = function(node, nodeName) {
 	}
 	return result;
 };
-
