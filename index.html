@@ -30,10 +30,9 @@
 				<!-- TODO: Replace with icons -->
 				<!-- TODO: Make menu slide open for narrower screens -->
 				<ul>
-					<li><button type="button" class="btn btn-primary sidebar-button" data-toggle="toggleSidebar"><i class="glyphicon glyphicon-chevron-left"></i></button></li>
-					<li ng-click="ui.sidebar.changeToPanel('stats')">P</li>
-					<li ng-click="ui.sidebar.changeToPanel('shop')">S</li>
-					<li ng-click="ui.sidebar.changeToPanel('achievements')">A</li>
+					<li data-toggle="toggleSidebar" ng-click="ui.sidebar.changeToPanel('stats')">P</li>
+					<li data-toggle="toggleSidebar" ng-click="ui.sidebar.changeToPanel('shop')">S</li>
+					<li data-toggle="toggleSidebar" ng-click="ui.sidebar.changeToPanel('achievements')">A</li>
 				</ul>
 			</div>
 			<div class="sidebar-content">

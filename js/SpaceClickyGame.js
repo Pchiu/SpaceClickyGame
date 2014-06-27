@@ -102,23 +102,3 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 		templateUrl: 'templates/purchase.html'
 	}
 })
-
-var sidebarActive = false;
-
-$(document).ready(function() {
-  $('[data-toggle=toggleSidebar]').click(function() {
-    $('.wrapper').toggleClass('active');
-    if (sidebarActive){
-    	$('#sidebar').animate({
-    		right:50
-    	})
-    	sidebarActive = false
-    }
-    else {
-    	$('#sidebar').animate({
-    		right:300
-    	})
-    	sidebarActive = true
-    }
-  });
-});
