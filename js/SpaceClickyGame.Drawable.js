@@ -1,9 +1,10 @@
 var Drawable = function(gameObject, kineticLayer, position) {
 	this.kLayer = kineticLayer;
+	var spriteLoaded = new CustomEvent("spriteLoaded", {"detail": this});
 	GameEntity.call(this, gameObject, position)
-	
 	if (gameObject.cachedImage != null)
 	{
+		document.dispatchEvent(spriteLoaded);
 		return;
 	}
 
@@ -44,10 +45,10 @@ Drawable.prototype.animate = function(frame) {
 
 Drawable.prototype.finalizeGroupToImage = function(spriteGroup) {
 	this.kLayer.add(spriteGroup.imageGroup);
+	
 	var self = this;
 	spriteGroup.imageGroup.toImage({
 		callback: function(img) {
-			console.log("Test")
 			var image = new Kinetic.Image({
 				image: img,
 				x: self.position.x,
@@ -60,6 +61,8 @@ Drawable.prototype.finalizeGroupToImage = function(spriteGroup) {
 			image.cache();
 			image.drawHitFromCache();
 			image.on('click', self.onClick.bind)
+			var spriteLoaded = new CustomEvent("spriteLoaded", {"detail": self});
+			document.dispatchEvent(spriteLoaded);
 		}
 	})
 };

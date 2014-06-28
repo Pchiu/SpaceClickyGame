@@ -24,13 +24,14 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 
 	$scope.$watch("player.purchasedUpgrades['miningDrone']", function(miningDrones) {
 		if(miningDrones) {
-			$scope.kineticCanvas.addDrone();
+			$scope.kineticCanvas.addMiningDrone();
 		}
 	}, true);
 }])
 
 // Set up kinetic.js stage
 .directive('spaceClickyStage', ['GameObjects', function(GameObjects) {
+
 	return {
 		link: function (scope, element, attrs) {
 			scope.kineticCanvas = {
@@ -42,20 +43,24 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 				drawables: [],
 
 				addDrawable: function (drawable) {
-					this.drawables.push(drawable);
+					var self = this;
+					self.drawables.push(drawable);
+					
 				},
 
-				addDrone: function() {
-					this.addDrawable(new Drone(GameObjects.spriteGroups.drones.miningDrone, this.mainLayer, {x:250, y:250},
-										 this.getRandomInt(200,250), this.getRandomInt(7000,25000)));
-					
+				addMiningDrone: function() {
+					var self = this;
+					var drone = new MiningDrone(GameObjects.spriteGroups.drones.miningDrone, this.mainLayer, {x:250, y:250}, this.getRandomInt(200, 250), this.getRandomInt(7000, 25000));
 				},
 
 				addAsteroid: function(spriteGroup, position, rotationspeed) {
 					var self = this;
-					$.when(new Asteroid(spriteGroup, this.mainLayer, position, rotationspeed)).then( function(asteroid){
-						self.addDrawable(asteroid)
-						});
+					var asteroid = new Asteroid(spriteGroup, this.mainLayer, position, rotationspeed);
+					asteroid.onClick = function() {
+							scope.player.clicks += 1;
+							scope.player.money += 1.00 * scope.player.multiplier;
+							scope.$apply();
+						}
 				},
 
 				getRandomInt: function(min, max) {
@@ -65,15 +70,6 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 				setStage: function() {
 					/* Setting up the first asteroid */
 					this.addAsteroid(GameObjects.spriteGroups.rocks.basicRock, {x:250, y:250}, -80000);
-					/*
-					var moneyAsteroid = new Asteroid(GameObjects.spriteGroups.rocks.basicRock, this.mainLayer, {x:250, y:250}, -80000);
-					moneyAsteroid.onClick = function() {
-						scope.player.clicks += 1;
-						scope.player.money += 1.00 * scope.player.multiplier;
-						scope.$apply();
-					};
-					this.addDrawable(moneyAsteroid);
-					*/
 				},
 
 				init: function() {
@@ -82,6 +78,11 @@ angular.module('SpaceClickyGameApp', ['ngAnimate'])
 						width: 500, 
 						height: 500
 					});
+
+					var self = this;
+					document.addEventListener("spriteLoaded", function(event) {
+						self.addDrawable(event.detail);
+					})
 
 					this.mainLayer = new Kinetic.Layer();
 					this.mainStage.add(this.mainLayer);
