@@ -58,6 +58,7 @@ Drawable.prototype.finalizeGroupToImage = function(spriteGroup) {
 			})
 			self.gameObject.cachedImage = image;
 			self.kLayer.add(image);
+			spriteGroup.imageGroup.remove();
 			image.cache();
 			image.drawHitFromCache();
 			image.on('click', self.onClick.bind)
