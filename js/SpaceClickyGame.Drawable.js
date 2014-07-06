@@ -82,12 +82,15 @@ Drawable.prototype.createSpriteGroup = function(gameObject, parent, x, y) {
 		'imageGroup': kGroup,
 	};
 
+	/* TODO: Remove comment after bugfix
+		 If you change this offset to (0, 0), the asteroid appears.
+		 We conclude the image is loaded, but drawn in the wrong spot.*/
 	var kImage = new Kinetic.Image({
 		x: x,
 		y: y,
 	}) 
 
-	kImage.src = gameObject.cachedImages[parent.sprite.id];
+	kImage.setImage(gameObject.cachedImages[parent.sprite.id]);
 	spriteGroup.imageGroup.offsetX(kImage.width()/2);
 	spriteGroup.imageGroup.offsetY(kImage.height()/2);
 	spriteGroup.imageGroup.add(kImage);
@@ -126,7 +129,7 @@ Drawable.prototype.findNode = function(node, nodeName) {
 		return node;
 	}
 	var result = null;
-	for (var i = 0; resullt == null && i < node.children.length; i++) {
+	for (var i = 0; result == null && i < node.children.length; i++) {
 		result = this.findNode(node.children[i], nodeName)
 	}
 	return result;
