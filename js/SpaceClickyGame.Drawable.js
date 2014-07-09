@@ -47,6 +47,8 @@ Drawable.prototype.finalizeGroupToImage = function(spriteGroup) {
 	this.kLayer.add(spriteGroup.imageGroup);
 	
 	var self = this;
+	spriteGroup.imageGroup.width(this.getGroupWidth(spriteGroup.imageGroup));
+	spriteGroup.imageGroup.height(this.getGroupHeight(spriteGroup.imageGroup));
 	spriteGroup.imageGroup.toImage({
 		callback: function(img) {
 			var image = new Kinetic.Image({
@@ -68,14 +70,54 @@ Drawable.prototype.finalizeGroupToImage = function(spriteGroup) {
 	})
 };
 
+Drawable.prototype.getGroupWidth = function(imageGroup) {
+	var minX = 0;
+	var maxX = 0;
+	
+	for(var i = 0; i < imageGroup.children.length; i++)
+	{
+		var attributes = imageGroup.children[i].attrs;
+		var offset = attributes.offsetX == null ? 0 : attributes.offsetX
+		if (attributes.x - offset < minX)
+		{
+			minX = attributes.x - offset;
+		}
+		if (attributes.x + attributes.image.width - offset > maxX)
+		{
+			maxX = attributes.x + attributes.image.width - offset;
+		}
+	}
+	return maxX - minX;
+};
+
+Drawable.prototype.getGroupHeight = function(imageGroup) {
+	var minY = 0;
+	var maxY = 0;
+	
+	for(var i = 0; i < imageGroup.children.length; i++)
+	{
+		var attributes = imageGroup.children[i].attrs;
+		var offset = attributes.offsetY == null ? 0 : attributes.offsetY
+		if (attributes.y - offset < minY)
+		{
+			minY = attributes.y - offset;
+		}
+		if (attributes.y + attributes.image.height - offset > maxY)
+		{
+			maxY = attributes.y + attributes.image.height - offset;
+		}		
+	}
+	return maxY - minY;
+};
+
 Drawable.prototype.onClick = function() {
 	console.log(this.id + " was CLICKED!");
 };
 
 Drawable.prototype.createSpriteGroup = function(gameObject, parent, x, y) {
 	var kGroup = new Kinetic.Group({
-		x: x,
-		y: y,
+		x: 0,
+		y: 0,
 	})
 
 	var spriteGroup = {
@@ -86,13 +128,13 @@ Drawable.prototype.createSpriteGroup = function(gameObject, parent, x, y) {
 		 If you change this offset to (0, 0), the asteroid appears.
 		 We conclude the image is loaded, but drawn in the wrong spot.*/
 	var kImage = new Kinetic.Image({
-		x: x,
-		y: y,
+		x: 0,
+		y: 0,
 	}) 
 
 	kImage.setImage(gameObject.cachedImages[parent.sprite.id]);
-	spriteGroup.imageGroup.offsetX(kImage.width()/2);
-	spriteGroup.imageGroup.offsetY(kImage.height()/2);
+	spriteGroup.imageGroup.offsetX(0);
+	spriteGroup.imageGroup.offsetY(0);
 	spriteGroup.imageGroup.add(kImage);
 	
 	spriteGroup["root"] = {'parent': null, 'id': parent.name, 'xOffset': 0, 'yOffset': 0, 'children': []};
@@ -114,11 +156,11 @@ Drawable.prototype.addChildToSpriteGroup = function(gameObject, spriteGroup, com
 
 	var kImage = new Kinetic.Image({
 		x: parentNode.xOffset + component.parentAnchorPoint.x,
-		y: parentNode.yOsset + component.parentAnchorPoint.y,
+		y: parentNode.yOffset + component.parentAnchorPoint.y,
 		offset: {x: component.childAnchorPoint.x, y: component.childAnchorPoint.y},
 		rotation: component.angle,
 	})
-	kImage.image.src = gameObject.cachedImages[component.sprite.id];
+	kImage.setImage(gameObject.cachedImages[component.sprite.id]);
 	spriteGroup.imageGroup.add(kImage);
 	parentNode.children.push({'parent': parentNode, 'id': component.name, 'xOffset': kImage.x() - kImage.offsetX(), 'yOffset': kImage.y() - kImage.offsetY(), 'children': []})
 }

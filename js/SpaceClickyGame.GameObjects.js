@@ -13,7 +13,7 @@ angular.module('SpaceClickyGameApp')
 				'id': 'miningDrone',
 				'imgpath': 'images/miningdrone.png',
 				'anchorPoints': {
-					drill: {'x': 0, 'y': 18},
+					drill: {'x': 18, 'y': 0},
 					left: {'x':0, 'y': 22},
 					right: {'x':36, 'y': 22},
 				}
